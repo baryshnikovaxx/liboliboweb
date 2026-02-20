@@ -439,10 +439,7 @@ export default function Page() {
               <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-6 md:p-7">
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
-                  <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/70">
-                    Место под обложки кейсов
-                  </div>
-                  <div className="mt-4 grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <CoverPlaceholder label="Обложка #1" src={caseCovers[0]} />
                     <CoverPlaceholder label="Обложка #2" src={caseCovers[1]} />
                     <CoverPlaceholder label="Обложка #3" src={caseCovers[2]} />
@@ -606,15 +603,15 @@ export default function Page() {
                     <div className="text-xl font-bold leading-tight">{w.title} — {w.company}</div>
                     <p className="mt-3 text-base leading-relaxed text-white/80">Задача: {w.goal}</p>
                   </div>
-                  <div className="mt-auto min-h-6 pt-2">
+                  <div className="mt-auto min-h-6 pt-1">
                     {w.link ? (
                       <a
                         href={w.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-base font-normal text-white/80 transition hover:text-white"
+                        className="inline-flex items-center gap-1 text-base font-normal text-white/80 underline-offset-4 transition hover:text-[#FF383C] hover:underline"
                       >
-                        Послушать
+                        Послушать <span aria-hidden="true">→</span>
                       </a>
                     ) : null}
                   </div>
