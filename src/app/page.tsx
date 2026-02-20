@@ -191,6 +191,7 @@ function CoverPlaceholder({ label = "Обложка" }: { label?: string }) {
 
 export default function Page() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [openStep, setOpenStep] = useState("1");
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -299,6 +300,7 @@ export default function Page() {
       text: "Создадим личный кабинет на хостинге, сделаем релиз на всех платформах.",
     },
   ];
+  const activeStep = steps.find((s) => s.n === openStep) ?? steps[0];
 
   const works = [
     { title: "Торг уместен", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Привлечение новой аудитории" },
@@ -502,36 +504,59 @@ export default function Page() {
               Как устроена <HandUnderline>работа</HandUnderline>
             </h3>
 
-            <div className="relative mt-8">
-              <div className="pointer-events-none absolute left-1/2 top-2 hidden h-[calc(100%-1rem)] w-px -translate-x-1/2 bg-white/10 md:block" />
-              <div className="grid gap-6 md:grid-cols-2">
-                {steps.map((s, idx) => (
-                  <div key={s.n} className={cn("relative", idx % 2 === 1 ? "md:mt-14" : "")}>
-                    <div
-                      className={cn(
-                        "pointer-events-none absolute top-8 hidden h-px w-8 bg-white/20 md:block",
-                        idx % 2 === 0 ? "right-[-2rem]" : "left-[-2rem]",
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        "pointer-events-none absolute top-[1.7rem] hidden h-3 w-3 rounded-full border border-[#111111] md:block",
-                        idx % 2 === 0 ? "right-[-2.35rem]" : "left-[-2.35rem]",
-                      )}
-                      style={{ backgroundColor: COLORS.accent }}
-                    />
-                    <Card className="h-full">
-                      <div className="flex items-baseline justify-between gap-4">
-                        <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">
+            <div className="mt-8 overflow-hidden border border-white/15 bg-white/[0.02] p-5 md:p-7">
+              <div className="relative">
+                <div className="pointer-events-none absolute left-0 right-0 top-5 hidden h-px bg-white/15 md:block" />
+                <div className="grid gap-3 md:grid-cols-6 md:gap-4">
+                  {steps.map((s) => {
+                    const isActive = s.n === openStep;
+                    return (
+                      <button
+                        key={s.n}
+                        type="button"
+                        onClick={() => setOpenStep(s.n)}
+                        className={cn(
+                          "group relative rounded-none border px-3 py-3 text-left transition",
+                          isActive
+                            ? "border-white/30 bg-white/[0.06]"
+                            : "border-white/15 bg-white/[0.01] hover:border-white/25 hover:bg-white/[0.03]",
+                        )}
+                        aria-expanded={isActive}
+                      >
+                        <span
+                          className={cn(
+                            "mb-2 block h-2 w-2 rounded-full border border-[#111111]",
+                            isActive ? "bg-[#FF0000]" : "bg-white/45",
+                          )}
+                        />
+                        <span
+                          className={cn(
+                            "block text-xs font-bold uppercase tracking-[0.2em]",
+                            isActive ? "text-white" : "text-white/60",
+                          )}
+                        >
                           шаг {s.n}
-                        </div>
-                        <div className="h-1 w-16" style={{ backgroundColor: COLORS.accent }} />
-                      </div>
-                      <div className="mt-3 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight">{s.title}</div>
-                      <p className="mt-3 text-base leading-relaxed text-white/80">{s.text}</p>
-                    </Card>
+                        </span>
+                        <span className={cn("mt-1 block text-sm leading-snug", isActive ? "text-white/90" : "text-white/70")}>
+                          {s.title}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <Card>
+                  <div className="flex items-baseline justify-between gap-4">
+                    <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">
+                      раскрытие шага {activeStep.n}
+                    </div>
+                    <div className="h-1 w-16" style={{ backgroundColor: COLORS.accent }} />
                   </div>
-                ))}
+                  <div className="mt-3 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight">{activeStep.title}</div>
+                  <p className="mt-3 text-base leading-relaxed text-white/80">{activeStep.text}</p>
+                </Card>
               </div>
             </div>
 
