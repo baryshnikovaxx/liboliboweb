@@ -139,7 +139,7 @@ function Section({
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("relative overflow-hidden border border-white/15 bg-white/[0.02] p-6 md:p-7", className)}>
+    <div className={cn("relative h-full overflow-hidden border border-white/15 bg-white/[0.02] p-6 md:p-7", className)}>
       <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
       <div className="relative z-10">{children}</div>
     </div>
@@ -424,47 +424,49 @@ export default function Page() {
           <div className="grid gap-6 md:grid-cols-3">
             {formats.map((f) => (
               <Card key={f.title} className={cn(f.featured ? "md:-translate-y-2" : "")}>
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <div className="text-xl font-bold leading-tight">{f.title}</div>
-                    <div className="mt-2 text-base font-bold text-white/70">{f.duration}</div>
+                <div className="flex h-full flex-col">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="text-xl font-bold leading-tight">{f.title}</div>
+                      <div className="mt-2 text-base font-bold text-white/70">{f.duration}</div>
+                    </div>
+                    {f.featured ? (
+                      <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em]">
+                        <span className="inline-block h-2 w-2" style={{ backgroundColor: COLORS.accent }} />
+                        топ-формат
+                      </span>
+                    ) : null}
                   </div>
-                  {f.featured ? (
-                    <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em]">
-                      <span className="inline-block h-2 w-2" style={{ backgroundColor: COLORS.accent }} />
-                      топ-формат
-                    </span>
-                  ) : null}
-                </div>
 
-                <p className="mt-4 text-base leading-relaxed text-white/80">{f.desc}</p>
+                  <p className="mt-4 text-base leading-relaxed text-white/80">{f.desc}</p>
 
-                <div className="mt-6">
-                  <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">что входит</div>
-                  <ul className="mt-3 space-y-2 text-base text-white/80">
-                    {f.includes.map((x) => (
-                      <li key={x} className="flex gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0" style={{ backgroundColor: COLORS.accent }} />
-                        <span>{x}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                  <div className="mt-6">
+                    <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">что входит</div>
+                    <ul className="mt-3 space-y-2 text-base text-white/80">
+                      {f.includes.map((x) => (
+                        <li key={x} className="flex gap-3">
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0" style={{ backgroundColor: COLORS.accent }} />
+                          <span>{x}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
-                <div className="mt-6">
-                  <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">преимущества</div>
-                  <ul className="mt-3 space-y-2 text-base text-white/80">
-                    {f.benefits.map((x) => (
-                      <li key={x} className="flex gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0" style={{ backgroundColor: COLORS.accent }} />
-                        <span>{x}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                  <div className="mt-6">
+                    <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">преимущества</div>
+                    <ul className="mt-3 space-y-2 text-base text-white/80">
+                      {f.benefits.map((x) => (
+                        <li key={x} className="flex gap-3">
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0" style={{ backgroundColor: COLORS.accent }} />
+                          <span>{x}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
-                <div className="mt-8">
-                  <Button onClick={() => scrollToId("contacts")}>Запросить медиакит</Button>
+                  <div className="mt-auto pt-8">
+                    <Button onClick={() => scrollToId("contacts")}>Запросить медиакит</Button>
+                  </div>
                 </div>
               </Card>
             ))}
@@ -558,13 +560,13 @@ export default function Page() {
           <div className="grid gap-6 md:grid-cols-3">
             {works.map((w) => (
               <Card key={w.title}>
-                <div className="grid gap-4">
+                <div className="flex h-full flex-col gap-4">
                   <CoverPlaceholder label="Обложка" />
                   <div>
                     <div className="text-xl font-bold leading-tight">{w.title} — {w.company}</div>
                     <p className="mt-3 text-base leading-relaxed text-white/80">Задача: {w.goal}</p>
                   </div>
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="mt-auto flex items-center justify-between gap-3">
                     {w.link ? (
                       <a
                         href={w.link}
