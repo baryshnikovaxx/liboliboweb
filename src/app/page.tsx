@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 const COLORS = {
   bg: "#111111",
   fg: "#FFFFFF",
-  accent: "#FF0000",
+  accent: "#FF383C",
 };
 
 const HEADER_OFFSET = 88;
@@ -50,20 +50,22 @@ function Button({
   children,
   variant = "primary",
   onClick,
+  className = "",
 }: {
   children: React.ReactNode;
   variant?: "primary" | "secondary";
   onClick?: () => void;
+  className?: string;
 }) {
   const base =
     "inline-flex items-center justify-center px-5 py-3 text-sm font-bold tracking-wide uppercase transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#111111] rounded-none";
   const styles =
     variant === "primary"
-      ? "bg-[#FF0000] text-white hover:opacity-90 focus:ring-[#FF0000]"
+      ? "bg-[#FF383C] text-white hover:opacity-90 focus:ring-[#FF383C]"
       : "border border-white/30 text-white hover:border-white/60 hover:bg-white/5 focus:ring-white/60";
 
   return (
-    <button className={cn(base, styles)} onClick={onClick} type="button">
+    <button className={cn(base, styles, className)} onClick={onClick} type="button">
       {children}
     </button>
   );
@@ -150,7 +152,15 @@ function Divider() {
   return <div className="h-px w-full bg-white/10" />;
 }
 
-function CoverPlaceholder({ label = "Обложка" }: { label?: string }) {
+function CoverPlaceholder({ label = "Обложка", src }: { label?: string; src?: string }) {
+  if (src) {
+    return (
+      <div className="relative aspect-square w-full overflow-hidden bg-white/5">
+        <Image src={src} alt={label} fill className="object-cover" sizes="(min-width: 768px) 240px, 45vw" />
+      </div>
+    );
+  }
+
   return (
     <div className="relative aspect-square w-full overflow-hidden bg-white/5">
       <div className="absolute inset-0 opacity-40">
@@ -314,6 +324,7 @@ export default function Page() {
     },
     { title: "Город, в котором", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Повышение лояльности аудитории" },
   ];
+  const caseCovers = ["/case1.jpg", "/case2.jpg", "/case3.jpg", "/case4.jpg", "/case5.jpg"];
 
   return (
     <div
@@ -402,10 +413,10 @@ export default function Page() {
                     Место под обложки кейсов
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-4">
-                    <CoverPlaceholder label="Обложка #1" />
-                    <CoverPlaceholder label="Обложка #2" />
-                    <CoverPlaceholder label="Обложка #3" />
-                    <CoverPlaceholder label="Обложка #4" />
+                    <CoverPlaceholder label="Обложка #1" src={caseCovers[0]} />
+                    <CoverPlaceholder label="Обложка #2" src={caseCovers[1]} />
+                    <CoverPlaceholder label="Обложка #3" src={caseCovers[2]} />
+                    <CoverPlaceholder label="Обложка #4" src={caseCovers[3]} />
                   </div>
                 </div>
               </div>
@@ -421,9 +432,9 @@ export default function Page() {
           title={<><span>Реклама в </span><HandUnderline>подкастах</HandUnderline><span> студии</span></>}
           subtitle="Нативные форматы, которые не раздражают слушателей — и при этом дают бренду заметный эффект."
         >
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid auto-rows-fr items-stretch gap-6 md:grid-cols-3">
             {formats.map((f) => (
-              <Card key={f.title} className={cn(f.featured ? "md:-translate-y-2" : "")}>
+              <Card key={f.title}>
                 <div className="flex h-full flex-col">
                   <div className="flex items-start justify-between gap-4">
                     <div>
@@ -490,7 +501,7 @@ export default function Page() {
             Кому подойдет
           </h3>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid auto-rows-fr items-stretch gap-6 md:grid-cols-2">
             {audiences.map((a) => (
               <Card key={a.title}>
                 <div className="text-lg font-bold leading-tight">{a.title}</div>
@@ -512,7 +523,7 @@ export default function Page() {
                 </div>
               </div>
 
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid auto-rows-fr items-stretch gap-6 md:grid-cols-2">
                 {steps.map((s) => (
                   <Card key={s.n} className="bg-white/[0.035]">
                     <div className="flex items-start gap-4">
@@ -557,31 +568,36 @@ export default function Page() {
           title={<><span>Наши </span><HandUnderline>работы</HandUnderline></>}
           subtitle="Подборка подкастов студии с возможностью сразу перейти к прослушиванию."
         >
-          <div className="grid gap-6 md:grid-cols-3">
-            {works.map((w) => (
+          <div className="grid auto-rows-fr items-stretch gap-6 md:grid-cols-3">
+            {works.map((w, idx) => (
               <Card key={w.title}>
                 <div className="flex h-full flex-col gap-4">
-                  <CoverPlaceholder label="Обложка" />
+                  <CoverPlaceholder label={w.title} src={caseCovers[idx % caseCovers.length]} />
                   <div>
                     <div className="text-xl font-bold leading-tight">{w.title} — {w.company}</div>
                     <p className="mt-3 text-base leading-relaxed text-white/80">Задача: {w.goal}</p>
                   </div>
-                  <div className="mt-auto flex items-center justify-between gap-3">
+                  <div className="mt-auto flex items-end justify-between gap-3">
                     {w.link ? (
                       <a
                         href={w.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-sm font-bold uppercase tracking-[0.22em] text-white/80 hover:text-white"
+                        className="whitespace-nowrap text-sm font-bold uppercase tracking-[0.22em] text-white/80 hover:text-white"
                       >
                         Перейти к подкасту →
                       </a>
                     ) : (
-                      <span className="text-sm font-bold uppercase tracking-[0.22em] text-white/35">
+                      <span className="whitespace-nowrap text-sm font-bold uppercase tracking-[0.22em] text-white/35">
                         ссылка по запросу
                       </span>
                     )}
-                    <Button onClick={() => scrollToId("contacts")}>Хочу так же</Button>
+                    <Button
+                      onClick={() => scrollToId("contacts")}
+                      className="min-w-[180px] whitespace-nowrap normal-case tracking-normal"
+                    >
+                      Хочу так же
+                    </Button>
                   </div>
                 </div>
               </Card>
@@ -645,6 +661,13 @@ export default function Page() {
                   <div className="pt-2">
                     <Button>Отправить запрос</Button>
                   </div>
+                  <label className="mt-2 flex items-start gap-3 text-sm leading-relaxed text-white/70">
+                    <input
+                      type="checkbox"
+                      className="mt-1 h-4 w-4 rounded-none border border-white/30 bg-transparent accent-[#FF383C]"
+                    />
+                    <span>Соглашаюсь на обработку персональных данных</span>
+                  </label>
                 </form>
               </Card>
             </div>
@@ -653,8 +676,7 @@ export default function Page() {
               <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-7">
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
-                  <div className="text-sm font-bold uppercase tracking-[0.22em] text-white/70">Прямая связь</div>
-                  <p className="mt-4 text-base leading-relaxed text-white/80">
+                  <p className="text-[clamp(1.15rem,1.9vw,1.45rem)] leading-relaxed text-white/85">
                     Или просто напишите нам на почту{" "}
                     <a href="mailto:podcast@libolibo.ru" className="font-bold text-white hover:opacity-90">
                       podcast@libolibo.ru
@@ -670,11 +692,14 @@ export default function Page() {
         <footer className="border-t border-white/10">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-10 md:flex-row md:items-center md:justify-between">
             <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">
-              © Libo/Libo Podcast Studio
+              © Студия Либо/Либо
             </div>
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">
-              bg #111111 • accent #FF0000 • futura pt web
-            </div>
+            <a
+              href="/privacy"
+              className="text-xs font-bold uppercase tracking-[0.22em] text-white/50 transition hover:text-white/75"
+            >
+              Политика конфиденциальности
+            </a>
           </div>
         </footer>
       </main>
