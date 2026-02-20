@@ -224,14 +224,14 @@ export default function Page() {
 
   const formats = [
     {
-      title: "джингл",
-      duration: "длительность: до двух минут",
+      title: "Джингл",
+      duration: "длительность: до 2 минут",
       desc:
         "Лаконичная и нативная интеграция без сложной механики. В описание эпизода добавим текстовый блок с информацией о партнере, ссылкой и промокодом.",
       benefits: ["Идеальный вариант для первого знакомства с подкастами"],
     },
     {
-      title: "партнерская рубрика",
+      title: "Партнерская рубрика",
       duration: "длительность: до 3 минут",
       desc:
         "Нативный формат, который любят слушатели. Рекламное сообщение органично проникает в ToV подкаста. Истории от ведущих и слушателей, эксперименты, советы или хохмы: идею придумываем вместе с партнером. В описание эпизода добавим текстовый блок с информацией о партнере, ссылкой и промокодом.",
@@ -241,7 +241,7 @@ export default function Page() {
       ],
     },
     {
-      title: "эксклюзивное спонсорство сезона",
+      title: "Эксклюзивное спонсорство сезона",
       duration: "длительность: 10 эпизодов одного сезона, интеграция в каждом выпуске длится 2-3 минуты",
       desc:
         "Серийный формат с максимальным охватом аудитории подкаста. Придумаем органичную рубрику, чтобы познакомить слушателей с ценностями и преимуществами бренда партнера. Вы будете единственным партнером сезона (это круто!). В описание эпизода добавим текстовый блок с информацией о партнере, ссылкой и промокодом.",
@@ -465,8 +465,10 @@ export default function Page() {
                       <div className="mt-2 text-base font-bold text-white/70">{f.duration}</div>
                     </div>
                     {f.featured ? (
-                      <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em]">
-                        <span className="inline-block h-2 w-2" style={{ backgroundColor: COLORS.accent }} />
+                      <span
+                        className="inline-flex items-center rounded-full border border-dashed px-3 py-1 text-xs font-bold tracking-[0.08em]"
+                        style={{ borderColor: COLORS.accent, color: COLORS.accent }}
+                      >
                         топ-формат
                       </span>
                     ) : null}
@@ -596,7 +598,7 @@ export default function Page() {
                   <CoverPlaceholder label={w.title} src={w.cover} />
                   <div>
                     <div className="text-lg font-bold leading-tight md:text-xl">{w.title} — {w.company}</div>
-                    <p className="mt-2 text-sm leading-relaxed text-white/80 md:mt-3 md:text-base">Задача: {w.goal}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-white/80 md:mt-3 md:text-base">{w.goal}</p>
                   </div>
                   <div className="pt-0.5 md:mt-auto md:min-h-6 md:pt-1">
                     {w.link ? (
