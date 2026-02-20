@@ -311,20 +311,21 @@ export default function Page() {
   ];
 
   const works = [
-    { title: "Торг уместен", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Привлечение новой аудитории" },
-    { title: "Не все включено", company: "Veselovka Experience", link: "https://pc.st/1850920893", goal: "Повышение узнаваемости бренда" },
-    { title: "Уже в пути", company: "Яндекс Еда", link: "https://music.yandex.ru/album/13896573", goal: "Повышение лояльности аудитории" },
-    { title: "Хроники еды", company: "Кухня на районе", link: "https://pc.st/1520728618", goal: "Вовлечение и удержание аудитории" },
-    { title: "Взрослые — это мы", company: "Яндекс Плюс Детям + Ясно", link: "", goal: "Привлечение аудитории и повышение узнаваемости" },
+    { title: "Торг уместен", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Привлечение новой аудитории", cover: "/case1.jpg" },
+    { title: "Не все включено", company: "Veselovka Experience", link: "https://pc.st/1850920893", goal: "Повышение узнаваемости бренда", cover: "/case2.jpg" },
+    { title: "Уже в пути", company: "Яндекс Еда", link: "https://music.yandex.ru/album/13896573", goal: "Повышение лояльности аудитории", cover: "/case3.jpg" },
+    { title: "Хроники еды", company: "Кухня на районе", link: "https://pc.st/1520728618", goal: "Вовлечение и удержание аудитории", cover: "/case4.jpg" },
+    { title: "Взрослые — это мы", company: "Яндекс Плюс Детям + Ясно", link: "", goal: "Привлечение аудитории и повышение узнаваемости", cover: "/case5.jpg" },
     {
       title: "Как посмотреть",
       company: "Российская Национальная театральная Премия и Фестиваль «Золотая маска»",
       link: "https://pc.st/1523674546",
       goal: "Привлечение аудитории",
+      cover: "/сase6.jpg",
     },
-    { title: "Город, в котором", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Повышение лояльности аудитории" },
+    { title: "Город, в котором", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Повышение лояльности аудитории", cover: "/case7.jpg" },
   ];
-  const caseCovers = ["/case1.jpg", "/case2.jpg", "/case3.jpg", "/case4.jpg", "/case5.jpg"];
+  const caseCovers = ["/case1.jpg", "/case2.jpg", "/case3.jpg", "/case4.jpg"];
 
   return (
     <div
@@ -566,38 +567,27 @@ export default function Page() {
           id="works"
           kicker="Портфолио"
           title={<><span>Наши </span><HandUnderline>работы</HandUnderline></>}
-          subtitle="Подборка подкастов студии с возможностью сразу перейти к прослушиванию."
         >
           <div className="grid auto-rows-fr items-stretch gap-6 md:grid-cols-3">
-            {works.map((w, idx) => (
+            {works.map((w) => (
               <Card key={w.title}>
                 <div className="flex h-full flex-col gap-4">
-                  <CoverPlaceholder label={w.title} src={caseCovers[idx % caseCovers.length]} />
+                  <CoverPlaceholder label={w.title} src={w.cover} />
                   <div>
                     <div className="text-xl font-bold leading-tight">{w.title} — {w.company}</div>
                     <p className="mt-3 text-base leading-relaxed text-white/80">Задача: {w.goal}</p>
                   </div>
-                  <div className="mt-auto flex items-end justify-between gap-3">
+                  <div className="mt-auto min-h-6 pt-2">
                     {w.link ? (
                       <a
                         href={w.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="whitespace-nowrap text-sm font-bold uppercase tracking-[0.22em] text-white/80 hover:text-white"
+                        className="text-base font-normal text-white/80 transition hover:text-white"
                       >
-                        Перейти к подкасту →
+                        Послушать
                       </a>
-                    ) : (
-                      <span className="whitespace-nowrap text-sm font-bold uppercase tracking-[0.22em] text-white/35">
-                        ссылка по запросу
-                      </span>
                     )}
-                    <Button
-                      onClick={() => scrollToId("contacts")}
-                      className="min-w-[180px] whitespace-nowrap normal-case tracking-normal"
-                    >
-                      Хочу так же
-                    </Button>
                   </div>
                 </div>
               </Card>
@@ -691,12 +681,12 @@ export default function Page() {
 
         <footer className="border-t border-white/10">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-10 md:flex-row md:items-center md:justify-between">
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/50">
+            <div className="text-sm font-light text-white/50">
               © Студия Либо/Либо
             </div>
             <a
               href="/privacy"
-              className="text-xs font-bold uppercase tracking-[0.22em] text-white/50 transition hover:text-white/75"
+              className="text-sm font-light text-white/50 transition hover:text-white/75"
             >
               Политика конфиденциальности
             </a>
