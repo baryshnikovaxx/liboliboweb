@@ -191,7 +191,6 @@ function CoverPlaceholder({ label = "Обложка" }: { label?: string }) {
 
 export default function Page() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentStepIdx, setCurrentStepIdx] = useState(0);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -300,9 +299,6 @@ export default function Page() {
       text: "Создадим личный кабинет на хостинге, сделаем релиз на всех платформах.",
     },
   ];
-  const activeStep = steps[currentStepIdx];
-  const isFirstStep = currentStepIdx === 0;
-  const isLastStep = currentStepIdx === steps.length - 1;
 
   const works = [
     { title: "Торг уместен", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Привлечение новой аудитории" },
@@ -506,66 +502,36 @@ export default function Page() {
               Как устроена <HandUnderline>работа</HandUnderline>
             </h3>
 
-            <div className="mt-8 overflow-hidden border border-white/15 bg-white/[0.02] p-5 md:p-7">
-              <div className="mb-4 flex items-center justify-between gap-3 text-sm">
-                <span className="font-bold uppercase tracking-[0.2em] text-white/70">
-                  Шаг {currentStepIdx + 1} из {steps.length}
-                </span>
-                <div className="h-1 w-32 bg-white/15 md:w-44">
-                  <div
-                    className="h-full transition-all duration-300"
-                    style={{
-                      backgroundColor: COLORS.accent,
-                      width: `${((currentStepIdx + 1) / steps.length) * 100}%`,
-                    }}
-                  />
+            <div className="mt-8">
+              <div className="mb-5 flex items-center gap-3">
+                <div className="h-[2px] w-20" style={{ backgroundColor: COLORS.accent }} />
+                <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/65">
+                  6 последовательных этапов
                 </div>
               </div>
 
-              <div className="grid gap-6 md:grid-cols-[280px_1fr] md:items-start">
-                <div className="grid gap-2">
-                  {steps.map((s, idx) => {
-                    const isActive = idx === currentStepIdx;
-                    return (
-                      <button
-                        key={s.n}
-                        type="button"
-                        onClick={() => setCurrentStepIdx(idx)}
-                        className={cn(
-                          "w-full border px-3 py-3 text-left transition",
-                          isActive
-                            ? "border-white/30 bg-white/[0.07]"
-                            : "border-white/15 bg-white/[0.01] hover:border-white/25 hover:bg-white/[0.03]",
-                        )}
+              <div className="grid gap-6 md:grid-cols-2">
+                {steps.map((s) => (
+                  <Card key={s.n} className="bg-white/[0.035]">
+                    <div className="flex items-start gap-4">
+                      <div
+                        className="inline-flex h-12 w-12 shrink-0 items-center justify-center border text-xl font-bold"
+                        style={{ borderColor: COLORS.accent, color: COLORS.accent }}
                       >
-                        <div className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">Шаг {s.n}</div>
-                        <div className={cn("mt-1 text-sm leading-snug", isActive ? "text-white" : "text-white/75")}>
+                        {s.n}
+                      </div>
+                      <div className="w-full">
+                        <div className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: COLORS.accent }}>
+                          Шаг {s.n}
+                        </div>
+                        <div className="mt-2 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight text-white">
                           {s.title}
                         </div>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <Card className="h-full">
-                  <div className="flex items-baseline justify-between gap-4">
-                    <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">
-                      активный шаг {activeStep.n}
+                        <p className="mt-3 text-base leading-relaxed text-white/82">{s.text}</p>
+                      </div>
                     </div>
-                    <div className="h-1 w-16" style={{ backgroundColor: COLORS.accent }} />
-                  </div>
-                  <div className="mt-3 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight">{activeStep.title}</div>
-                  <p className="mt-3 text-base leading-relaxed text-white/80">{activeStep.text}</p>
-
-                  <div className="mt-6 flex items-center gap-3">
-                    <Button variant="secondary" onClick={() => !isFirstStep && setCurrentStepIdx((prev) => prev - 1)}>
-                      Назад
-                    </Button>
-                    <Button onClick={() => !isLastStep && setCurrentStepIdx((prev) => prev + 1)}>
-                      Далее
-                    </Button>
-                  </div>
-                </Card>
+                  </Card>
+                ))}
               </div>
             </div>
 
