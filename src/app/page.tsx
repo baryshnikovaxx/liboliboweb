@@ -321,7 +321,7 @@ export default function Page() {
       company: "Российская Национальная театральная Премия и Фестиваль «Золотая маска»",
       link: "https://pc.st/1523674546",
       goal: "Привлечение аудитории",
-      cover: "/сase6.jpg",
+      cover: "/case6.jpg",
     },
     { title: "Город, в котором", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Повышение лояльности аудитории", cover: "/case7.jpg" },
   ];
