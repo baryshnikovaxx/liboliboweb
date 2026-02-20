@@ -191,7 +191,7 @@ function CoverPlaceholder({ label = "Обложка" }: { label?: string }) {
 
 export default function Page() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [openStep, setOpenStep] = useState("1");
+  const [currentStepIdx, setCurrentStepIdx] = useState(0);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -300,7 +300,9 @@ export default function Page() {
       text: "Создадим личный кабинет на хостинге, сделаем релиз на всех платформах.",
     },
   ];
-  const activeStep = steps.find((s) => s.n === openStep) ?? steps[0];
+  const activeStep = steps[currentStepIdx];
+  const isFirstStep = currentStepIdx === 0;
+  const isLastStep = currentStepIdx === steps.length - 1;
 
   const works = [
     { title: "Торг уместен", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Привлечение новой аудитории" },
@@ -505,57 +507,64 @@ export default function Page() {
             </h3>
 
             <div className="mt-8 overflow-hidden border border-white/15 bg-white/[0.02] p-5 md:p-7">
-              <div className="relative">
-                <div className="pointer-events-none absolute left-0 right-0 top-5 hidden h-px bg-white/15 md:block" />
-                <div className="grid gap-3 md:grid-cols-6 md:gap-4">
-                  {steps.map((s) => {
-                    const isActive = s.n === openStep;
+              <div className="mb-4 flex items-center justify-between gap-3 text-sm">
+                <span className="font-bold uppercase tracking-[0.2em] text-white/70">
+                  Шаг {currentStepIdx + 1} из {steps.length}
+                </span>
+                <div className="h-1 w-32 bg-white/15 md:w-44">
+                  <div
+                    className="h-full transition-all duration-300"
+                    style={{
+                      backgroundColor: COLORS.accent,
+                      width: `${((currentStepIdx + 1) / steps.length) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-[280px_1fr] md:items-start">
+                <div className="grid gap-2">
+                  {steps.map((s, idx) => {
+                    const isActive = idx === currentStepIdx;
                     return (
                       <button
                         key={s.n}
                         type="button"
-                        onClick={() => setOpenStep(s.n)}
+                        onClick={() => setCurrentStepIdx(idx)}
                         className={cn(
-                          "group relative rounded-none border px-3 py-3 text-left transition",
+                          "w-full border px-3 py-3 text-left transition",
                           isActive
-                            ? "border-white/30 bg-white/[0.06]"
+                            ? "border-white/30 bg-white/[0.07]"
                             : "border-white/15 bg-white/[0.01] hover:border-white/25 hover:bg-white/[0.03]",
                         )}
-                        aria-expanded={isActive}
                       >
-                        <span
-                          className={cn(
-                            "mb-2 block h-2 w-2 rounded-full border border-[#111111]",
-                            isActive ? "bg-[#FF0000]" : "bg-white/45",
-                          )}
-                        />
-                        <span
-                          className={cn(
-                            "block text-xs font-bold uppercase tracking-[0.2em]",
-                            isActive ? "text-white" : "text-white/60",
-                          )}
-                        >
-                          шаг {s.n}
-                        </span>
-                        <span className={cn("mt-1 block text-sm leading-snug", isActive ? "text-white/90" : "text-white/70")}>
+                        <div className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">Шаг {s.n}</div>
+                        <div className={cn("mt-1 text-sm leading-snug", isActive ? "text-white" : "text-white/75")}>
                           {s.title}
-                        </span>
+                        </div>
                       </button>
                     );
                   })}
                 </div>
-              </div>
 
-              <div className="mt-6">
-                <Card>
+                <Card className="h-full">
                   <div className="flex items-baseline justify-between gap-4">
                     <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">
-                      раскрытие шага {activeStep.n}
+                      активный шаг {activeStep.n}
                     </div>
                     <div className="h-1 w-16" style={{ backgroundColor: COLORS.accent }} />
                   </div>
                   <div className="mt-3 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight">{activeStep.title}</div>
                   <p className="mt-3 text-base leading-relaxed text-white/80">{activeStep.text}</p>
+
+                  <div className="mt-6 flex items-center gap-3">
+                    <Button variant="secondary" onClick={() => !isFirstStep && setCurrentStepIdx((prev) => prev - 1)}>
+                      Назад
+                    </Button>
+                    <Button onClick={() => !isLastStep && setCurrentStepIdx((prev) => prev + 1)}>
+                      Далее
+                    </Button>
+                  </div>
                 </Card>
               </div>
             </div>
