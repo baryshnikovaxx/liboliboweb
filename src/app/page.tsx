@@ -616,7 +616,7 @@ export default function Page() {
                       >
                         Послушать
                       </a>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               </Card>
