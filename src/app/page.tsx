@@ -515,7 +515,6 @@ export default function Page() {
           id="production"
           kicker="Подкаст под ключ"
           title={<><span>Продакшен для вашего </span><HandUnderline>подкаста</HandUnderline></>}
-          subtitle="Полный цикл продакшена: от идеи до релиза."
         >
           <div className="mb-10 overflow-hidden border border-white/20 bg-white/[0.04] p-6 md:p-8">
             <div className="h-[2px] w-24" style={{ backgroundColor: COLORS.accent }} />
@@ -572,19 +571,31 @@ export default function Page() {
                     </div>
                   </Card>
                 ))}
+                <Card className="bg-white/[0.035] md:col-span-2">
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="inline-flex h-12 w-12 shrink-0 items-center justify-center border text-lg font-bold"
+                      style={{ borderColor: COLORS.accent, color: COLORS.accent }}
+                    >
+                      *7
+                    </div>
+                    <div className="w-full">
+                      <div className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: COLORS.accent }}>
+                        Дополнительный шаг
+                      </div>
+                      <div className="mt-2 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight text-white">
+                        Займемся продвижением подкаста
+                      </div>
+                      <p className="mt-3 text-base leading-relaxed text-white/82">
+                        Поможем раскрутиться на площадках и собрать больше аудитории.
+                      </p>
+                      <p className="mt-3 text-sm leading-relaxed text-white/65">
+                        Отдельная опция, которую обсуждаем индивидуально под каждый запрос; не входит в первичный бюджет.
+                      </p>
+                    </div>
+                  </div>
+                </Card>
               </div>
-            </div>
-
-            <div className="mt-8 overflow-hidden border border-white/15 bg-white/[0.03] p-5">
-              <div className="text-base font-bold" style={{ color: COLORS.accent }}>
-                *7 — займемся продвижением подкаста
-              </div>
-              <p className="mt-2 text-base leading-relaxed text-white/80">
-                Поможем раскрутиться на площадках и собрать больше аудитории.
-              </p>
-              <p className="mt-3 text-xs leading-relaxed text-white/60">
-                * Отдельная опция, которую обсуждаем индивидуально под каждый запрос; не входит в первичный бюджет.
-              </p>
             </div>
           </div>
         </Section>
