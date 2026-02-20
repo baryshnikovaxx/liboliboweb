@@ -342,19 +342,49 @@ export default function Page() {
           <Image src="/logo.svg" alt="Либо/Либо" width={160} height={36} priority />
           <button
             type="button"
-            onClick={() => setIsMenuOpen(true)}
-            aria-label="Открыть меню"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            aria-label={isMenuOpen ? "Закрыть меню" : "Открыть меню"}
+            aria-expanded={isMenuOpen}
             className="inline-flex h-10 w-10 items-center justify-center border border-white/20 text-white/90 transition hover:border-white/40 hover:text-white"
           >
-            <span className="sr-only">Открыть меню</span>
-            <span className="block h-[2px] w-5 bg-current" />
+            <span className="sr-only">{isMenuOpen ? "Закрыть меню" : "Открыть меню"}</span>
+            <span className="relative block h-4 w-5">
+              <span
+                className={cn(
+                  "absolute left-0 top-0 h-[2px] w-5 bg-current transition-all duration-300",
+                  isMenuOpen ? "top-[7px] rotate-45" : "",
+                )}
+              />
+              <span
+                className={cn(
+                  "absolute left-0 top-[7px] h-[2px] w-5 bg-current transition-all duration-300",
+                  isMenuOpen ? "opacity-0" : "opacity-100",
+                )}
+              />
+              <span
+                className={cn(
+                  "absolute left-0 top-[14px] h-[2px] w-5 bg-current transition-all duration-300",
+                  isMenuOpen ? "top-[7px] -rotate-45" : "",
+                )}
+              />
+            </span>
           </button>
         </div>
       </header>
 
-      {isMenuOpen ? (
-        <div className="fixed inset-0 z-50 bg-[#0a0b0f]">
-          <div className="mx-auto flex h-full w-full max-w-6xl flex-col px-6 py-5">
+      <div
+        className={cn(
+          "fixed inset-0 z-50 transition-opacity duration-300",
+          isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+        )}
+      >
+        <div className="absolute inset-0 bg-[#0a0b0f]" />
+        <div
+          className={cn(
+            "mx-auto flex h-full w-full max-w-6xl flex-col px-6 py-5 transition-all duration-300",
+            isMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0",
+          )}
+        >
             <div className="flex items-center justify-between">
               <Image src="/logo.svg" alt="Либо/Либо" width={160} height={36} priority />
               <button
@@ -379,9 +409,8 @@ export default function Page() {
                 </NavLinkButton>
               ))}
             </nav>
-          </div>
         </div>
-      ) : null}
+      </div>
 
       <main>
         <div className="mx-auto w-full max-w-6xl px-6 pt-14 pb-10 md:pt-20 md:pb-14">
