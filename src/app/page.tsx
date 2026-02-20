@@ -143,7 +143,7 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
   return (
     <div className={cn("relative h-auto overflow-hidden border border-white/15 bg-white/[0.02] p-5 md:h-full md:p-7", className)}>
       <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 h-full">{children}</div>
     </div>
   );
 }
