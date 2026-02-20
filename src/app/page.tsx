@@ -141,7 +141,7 @@ function Section({
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("relative h-full overflow-hidden border border-white/15 bg-white/[0.02] p-6 md:p-7", className)}>
+    <div className={cn("relative h-auto overflow-hidden border border-white/15 bg-white/[0.02] p-5 md:h-full md:p-7", className)}>
       <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
       <div className="relative z-10">{children}</div>
     </div>
@@ -459,7 +459,7 @@ export default function Page() {
           title={<><span>Реклама в </span><HandUnderline>подкастах</HandUnderline><span> студии</span></>}
           subtitle="Нативные форматы, которые не раздражают слушателей — и при этом дают бренду заметный эффект."
         >
-          <div className="grid auto-rows-fr items-stretch gap-6 md:grid-cols-3">
+          <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
             {formats.map((f) => (
               <Card key={f.title}>
                 <div className="flex h-full flex-col">
@@ -527,7 +527,7 @@ export default function Page() {
             Кому подойдет
           </h3>
 
-          <div className="grid auto-rows-fr items-stretch gap-6 md:grid-cols-2">
+          <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-2">
             {audiences.map((a) => (
               <Card key={a.title}>
                 <div className="text-lg font-bold leading-tight">{a.title}</div>
@@ -549,7 +549,7 @@ export default function Page() {
                 </div>
               </div>
 
-              <div className="grid auto-rows-fr items-stretch gap-6 md:grid-cols-2">
+              <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-2">
                 {steps.map((s) => (
                   <Card key={s.n} className="bg-white/[0.035]">
                     <div className="flex items-start gap-4">
@@ -563,10 +563,10 @@ export default function Page() {
                         <div className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: COLORS.accent }}>
                           Шаг {s.n}
                         </div>
-                        <div className="mt-2 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight text-white">
+                        <div className="mt-2 text-[clamp(1.05rem,2vw,1.5rem)] font-bold leading-tight text-white">
                           {s.title}
                         </div>
-                        <p className="mt-3 text-base leading-relaxed text-white/82">{s.text}</p>
+                        <p className="mt-2 text-sm leading-relaxed text-white/82 md:mt-3 md:text-base">{s.text}</p>
                       </div>
                     </div>
                   </Card>
@@ -586,10 +586,10 @@ export default function Page() {
                       <div className="mt-2 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight text-white">
                         Займемся продвижением подкаста
                       </div>
-                      <p className="mt-3 text-base leading-relaxed text-white/82">
+                      <p className="mt-2 text-sm leading-relaxed text-white/82 md:mt-3 md:text-base">
                         Поможем раскрутиться на площадках и собрать больше аудитории.
                       </p>
-                      <p className="mt-3 text-sm leading-relaxed text-white/65">
+                      <p className="mt-2 text-xs leading-relaxed text-white/65 md:mt-3 md:text-sm">
                         Отдельная опция, которую обсуждаем индивидуально под каждый запрос; не входит в первичный бюджет.
                       </p>
                     </div>
@@ -605,16 +605,16 @@ export default function Page() {
           kicker="Портфолио"
           title={<><span>Наши </span><HandUnderline>работы</HandUnderline></>}
         >
-          <div className="grid auto-rows-fr items-stretch gap-6 md:grid-cols-3">
+          <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
             {works.map((w) => (
               <Card key={w.title}>
-                <div className="flex h-full flex-col gap-4">
+                <div className="flex h-auto flex-col gap-3 md:h-full md:gap-4">
                   <CoverPlaceholder label={w.title} src={w.cover} />
                   <div>
-                    <div className="text-xl font-bold leading-tight">{w.title} — {w.company}</div>
-                    <p className="mt-3 text-base leading-relaxed text-white/80">Задача: {w.goal}</p>
+                    <div className="text-lg font-bold leading-tight md:text-xl">{w.title} — {w.company}</div>
+                    <p className="mt-2 text-sm leading-relaxed text-white/80 md:mt-3 md:text-base">Задача: {w.goal}</p>
                   </div>
-                  <div className="mt-auto min-h-6 pt-1">
+                  <div className="pt-0.5 md:mt-auto md:min-h-6 md:pt-1">
                     {w.link ? (
                       <a
                         href={w.link}
