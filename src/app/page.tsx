@@ -225,30 +225,27 @@ export default function Page() {
   const formats = [
     {
       title: "Джингл",
-      duration: "до 2 минут",
+      duration: "до двух минут",
       desc:
-        "Лаконичная и нативная интеграция без сложной механики. В описание эпизода добавим текстовый блок с информацией о партнере, ссылкой и промокодом.",
+        "Лаконичная интеграция без сложной механики. В описание эпизода добавим текстовый блок с информацией о партнере, ссылкой и промокодом. Минимум два эпизода.",
       benefits: ["Идеальный вариант для первого знакомства с подкастами"],
     },
     {
       title: "Партнерская рубрика",
-      duration: "до 3 минут",
+      duration: "до трех минут",
       desc:
-        "Нативный формат, который любят слушатели. Рекламное сообщение органично проникает в ToV подкаста. Истории от ведущих и слушателей, эксперименты, советы или хохмы: идею придумываем вместе с партнером. В описание эпизода добавим текстовый блок с информацией о партнере, ссылкой и промокодом.",
+        "Нативный формат, который любят слушатели. Рекламное сообщение органично проникает в ToV подкаста. Истории от ведущих и слушателей, эксперименты, советы или хохмы: идею придумываем вместе с партнером. В описание эпизода добавим текстовый блок с информацией о партнере, ссылкой и промокодом. Минимум три эпизода.",
       benefits: [
         "Возможность рассказать подробную историю о продукте",
-        "Построение долгосрочных связей с аудиторией через серию креативных модулей",
       ],
     },
     {
       title: "Эксклюзивное спонсорство сезона",
-      duration: "10 эпизодов одного сезона, интеграция в каждом выпуске длится 2-3 минуты",
+      duration: "длительность: 10 эпизодов одного сезона, интеграция в каждом выпуске: анонс партнера в начале выпуска и рубрика в середине (две-три минуты)",
       desc:
-        "Серийный формат с максимальным охватом аудитории подкаста. Придумаем органичную рубрику, чтобы познакомить слушателей с ценностями и преимуществами бренда партнера. Вы будете единственным партнером сезона (это круто!). В описание эпизода добавим текстовый блок с информацией о партнере, ссылкой и промокодом.",
+        "Серийный формат с максимальным охватом аудитории подкаста. Вы будете единственным партнером сезона (это круто!). В описание каждого эпизода добавим текстовый блок со ссылкой и промокодом.",
       benefits: [
-        "Формирование имиджа устойчивого партнера подкаста и рост доверия к продукту",
-        "Вовлечение слушателей за счет создания комплексной стратегии продвижения",
-        "Закрепление бренда в сознании аудитории на долгий срок",
+        "Самый бодрый рост узнаваемости и доверия к бренду",
       ],
       featured: true,
     },
@@ -257,7 +254,7 @@ export default function Page() {
   const audiences = [
     {
       title: "Любые бренды и компании",
-      text: "Поможет построить доверительные отношения с клиентами и подсветить вашу экспертизу.",
+      text: "Чтобы построить доверительные отношения с клиентами и подсветить вашу экспертизу.",
     },
     {
       title: "Сервисы и IT",
@@ -265,43 +262,43 @@ export default function Page() {
     },
     {
       title: "HR и внутренние коммуникации",
-      text: "Усилить бренд работодателя и укрепить корпоративную культуру.",
+      text: "Чтобы усилить бренд работодателя и укрепить корпоративную культуру.",
     },
     {
       title: "Эксперты и фаундеры",
-      text: "Развить и укрепить личный бренд.",
+      text: "Чтобы развить и укрепить личный бренд.",
     },
   ];
 
   const steps = [
     {
       n: "1",
-      title: "Определим формат и разработаем концепцию подкаста",
-      text: "Определим цели, аудиторию и tone of voice подкаста.",
+      title: "Определим формат и разработаем концепцию",
+      text: "Определим цели, аудиторию и tone of voice.",
     },
     {
       n: "2",
-      title: "Поработаем над содержанием подкаста",
-      text: "Составим поэпизодный план, соберем материал и продумаем драматургию.",
+      title: "Составим поэпизодный план, соберем материал и продумаем драматургию.",
+      text: "",
     },
     {
       n: "3",
-      title: "Подберем ведущего и организуем все записи",
-      text: "Срежиссируем весь процесс, даже если ведущий должен быть от вашей компании и удаленно.",
+      title: "Подберем ведущего и организуем записи.",
+      text: "Срежиссируем процесс, даже если ведущие и герои живут в разных частях планеты.",
     },
     {
       n: "4",
-      title: "Смонтируем эпизоды",
-      text: "Напишем джингл, очистим звук и отредактируем недочеты.",
+      title: "Смонтируем и отредактируем эпизоды.",
+      text: "Напишем джингл, очистим звук и подкорректируем недочеты.",
     },
     {
       n: "5",
-      title: "Разработаем визуальное и текстовое оформление",
+      title: "Разработаем визуальное и текстовое оформление.",
       text: "Придумаем название и описание подкаста (и каждого эпизода), задизайним обложку.",
     },
     {
       n: "6",
-      title: "Опубликуем подкаст",
+      title: "Опубликуем подкаст.",
       text: "Создадим личный кабинет на хостинге, сделаем релиз на всех платформах.",
     },
   ];
@@ -315,7 +312,7 @@ export default function Page() {
       title: "Взрослые — это мы",
       company: "Яндекс Плюс Детям + Ясно",
       link: "https://music.yandex.ru/album/33305638",
-      goal: "Привлечение аудитории и повышение узнаваемости",
+      goal: "Привлечение аудитории и повышение узнаваемости",
       cover: "/case5.jpg",
     },
     {
@@ -418,17 +415,13 @@ export default function Page() {
         <div className="mx-auto w-full max-w-6xl px-6 pt-14 pb-10 md:pt-20 md:pb-14">
           <div className="grid gap-10 md:grid-cols-12 md:gap-8">
             <div className="md:col-span-7">
-              <div className="text-xs font-bold uppercase tracking-[0.28em] text-white/70">
-                Для бизнеса
-              </div>
-
               <h1 className="mt-5 text-[clamp(2.5rem,7.2vw,5.25rem)] font-bold leading-[1.01]">
                 Подкасты, которые <HandUnderline>работают</HandUnderline> на ваш{" "}
                 <HandUnderline>бренд</HandUnderline>
               </h1>
 
               <p className="mt-6 max-w-xl text-[clamp(1.05rem,1.7vw,1.28rem)] leading-relaxed text-white/80">
-                Реклама в подкастах студии и продакшен под ключ — от задумки и концепции до публикации на платформах.
+                Реклама в подкастах Либо/Либо и продакшен — от задумки до публикации.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -459,7 +452,7 @@ export default function Page() {
           id="advertising"
           kicker="Для брендов"
           title={<><span>Реклама в </span><HandUnderline>подкастах</HandUnderline><span> студии</span></>}
-          subtitle="Нативные форматы, которые не раздражают слушателей — и при этом дают бренду заметный эффект."
+          subtitle="Разные форматы для разных задач"
         >
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
             {formats.map((f) => (
@@ -506,12 +499,12 @@ export default function Page() {
         <Section
           id="production"
           kicker="Подкаст под ключ"
-          title={<><span>Продакшен для вашего </span><HandUnderline>подкаста</HandUnderline></>}
+          title={<><span>Продакшен вашего </span><HandUnderline>подкаста</HandUnderline></>}
         >
           <div className="mb-10 overflow-hidden border border-white/20 bg-white/[0.04] p-6 md:p-8">
             <div className="h-[2px] w-24" style={{ backgroundColor: COLORS.accent }} />
             <p className="mt-5 max-w-4xl text-[clamp(1.5rem,2.7vw,2.2rem)] font-bold leading-tight text-white">
-              Возьмем на себя все этапы работы — от задумки и концепции до публикации на платформах.
+              Возьмем на себя все этапы работы: от задумки и концепции до публикации на платформах.
             </p>
           </div>
 
@@ -558,7 +551,9 @@ export default function Page() {
                         <div className="mt-2 text-[clamp(1.05rem,2vw,1.5rem)] font-bold leading-tight text-white">
                           {s.title}
                         </div>
-                        <p className="mt-2 text-sm leading-relaxed text-white/82 md:mt-3 md:text-base">{s.text}</p>
+                        {s.text ? (
+                          <p className="mt-2 text-sm leading-relaxed text-white/82 md:mt-3 md:text-base">{s.text}</p>
+                        ) : null}
                       </div>
                     </div>
                   </Card>
@@ -573,16 +568,13 @@ export default function Page() {
                     </div>
                     <div className="w-full">
                       <div className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: COLORS.accent }}>
-                        Дополнительный шаг
+                        Дополнительно
                       </div>
                       <div className="mt-2 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight text-white">
-                        Займемся продвижением подкаста
+                        Займемся продвижением
                       </div>
                       <p className="mt-2 text-sm leading-relaxed text-white/82 md:mt-3 md:text-base">
                         Поможем раскрутиться на площадках и собрать больше аудитории.
-                      </p>
-                      <p className="mt-2 text-xs leading-relaxed text-white/65 md:mt-3 md:text-sm">
-                        Отдельная опция, которую обсуждаем индивидуально под каждый запрос; не входит в первичный бюджет.
                       </p>
                     </div>
                   </div>
@@ -595,13 +587,19 @@ export default function Page() {
         <Section
           id="works"
           kicker="Портфолио"
-          title={<><span>Наши </span><HandUnderline>работы</HandUnderline></>}
+          title={<>Наши работы: продакшен</>}
         >
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
             {works.map((w) => (
               <Card key={w.title}>
                 <div className="flex h-auto flex-col gap-3 md:h-full md:gap-4">
-                  <CoverPlaceholder label={w.title} src={w.cover} />
+                  {w.link ? (
+                    <a href={w.link} target="_blank" rel="noreferrer" className="block">
+                      <CoverPlaceholder label={w.title} src={w.cover} />
+                    </a>
+                  ) : (
+                    <CoverPlaceholder label={w.title} src={w.cover} />
+                  )}
                   <div>
                     <div className="text-lg font-bold leading-tight md:text-xl">{w.title} — {w.company}</div>
                     <p className="mt-2 text-sm leading-relaxed text-white/80 md:mt-3 md:text-base">{w.goal}</p>
@@ -696,11 +694,11 @@ export default function Page() {
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
                   <p className="text-[clamp(1.15rem,1.9vw,1.45rem)] leading-relaxed text-white/85">
-                    Или просто напишите нам на почту{" "}
+                    Или просто напишите нам на{" "}
                     <a href="mailto:podcast@libolibo.ru" className="font-bold text-white hover:opacity-90">
-                      podcast@libolibo.ru
+                      podcast@libolibo.me
                     </a>
-                    , а мы свяжемся в ближайшее время.
+                    . Ответим шустро!
                   </p>
                 </div>
               </div>
