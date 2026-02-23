@@ -421,7 +421,7 @@ export default function Page() {
               </h1>
 
               <p className="mt-6 max-w-xl text-[clamp(1.05rem,1.7vw,1.28rem)] leading-relaxed text-white/80">
-                Реклама в подкастах Либо/Либо и продакшен — от задумки до публикации.
+                Реклама в подкастах Либо/Либо и продакшен — от задумки до публикации
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -450,7 +450,6 @@ export default function Page() {
 
         <Section
           id="advertising"
-          kicker="Для брендов"
           title={<><span>Реклама в </span><HandUnderline>подкастах</HandUnderline><span> студии</span></>}
           subtitle="Разные форматы для разных задач"
         >
@@ -476,7 +475,6 @@ export default function Page() {
                   <p className="mt-4 text-base leading-relaxed text-white/80">{f.desc}</p>
 
                   <div className="mt-6">
-                    <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">преимущества</div>
                     <ul className="mt-3 space-y-2 text-base text-white/80">
                       {f.benefits.map((x) => (
                         <li key={x} className="flex gap-3">
@@ -498,7 +496,6 @@ export default function Page() {
 
         <Section
           id="production"
-          kicker="Подкаст под ключ"
           title={<><span>Продакшен вашего </span><HandUnderline>подкаста</HandUnderline></>}
         >
           <div className="mb-10 overflow-hidden border border-white/20 bg-white/[0.04] p-6 md:p-8">
@@ -527,13 +524,6 @@ export default function Page() {
             </h3>
 
             <div className="mt-8">
-              <div className="mb-5 flex items-center gap-3">
-                <div className="h-[2px] w-20" style={{ backgroundColor: COLORS.accent }} />
-                <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/65">
-                  6 последовательных этапов
-                </div>
-              </div>
-
               <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-2">
                 {steps.map((s) => (
                   <Card key={s.n} className="bg-white/[0.035]">
@@ -586,7 +576,6 @@ export default function Page() {
 
         <Section
           id="works"
-          kicker="Портфолио"
           title={<>Наши работы: продакшен</>}
         >
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
