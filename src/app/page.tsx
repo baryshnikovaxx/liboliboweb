@@ -10,13 +10,6 @@ const COLORS = {
 };
 
 const HEADER_OFFSET = 88;
-const TYPO = {
-  display: "type-display",
-  sectionTitle: "type-section-title",
-  lead: "type-lead",
-  cardTitle: "type-card-title",
-  body: "type-body",
-};
 
 function cn(...xs: Array<string | false | null | undefined>) {
   return xs.filter(Boolean).join(" ");
@@ -65,7 +58,7 @@ function Button({
   className?: string;
 }) {
   const base =
-    "inline-flex items-center justify-center px-5 py-3 text-xs font-semibold tracking-[0.18em] uppercase transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#111111] rounded-none";
+    "inline-flex items-center justify-center px-5 py-3 text-sm font-bold tracking-wide uppercase transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#111111] rounded-none";
   const styles =
     variant === "primary"
       ? "bg-[#FF383C] text-white hover:opacity-90 focus:ring-[#FF383C]"
@@ -124,19 +117,19 @@ function Section({
 }) {
   return (
     <section id={id} className="scroll-mt-24">
-      <div className="mx-auto w-full px-4 py-16 md:px-8 xl:px-10 2xl:px-6">
+      <div className="mx-auto w-full max-w-6xl px-6 py-16">
         {kicker ? (
           <div className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-white/70">
             {kicker}
           </div>
         ) : null}
         {title ? (
-          <h2 className={cn(TYPO.sectionTitle, "text-white")}>
+          <h2 className="text-[clamp(2rem,5vw,4.25rem)] font-bold leading-[1.03] text-white">
             {title}
           </h2>
         ) : null}
         {subtitle ? (
-          <p className={cn("mt-4 max-w-3xl text-white/80", TYPO.lead)}>
+          <p className="mt-4 max-w-3xl text-[clamp(1.05rem,1.7vw,1.3rem)] leading-relaxed text-white/80">
             {subtitle}
           </p>
         ) : null}
@@ -332,14 +325,6 @@ export default function Page() {
     { title: "Город, в котором", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Повышение лояльности аудитории", cover: "/case7.jpg" },
   ];
   const caseCovers = ["/case1.jpg", "/case2.jpg", "/case3.jpg", "/case4.jpg"];
-  const logoStrip = [
-    { name: "Авито", src: "" },
-    { name: "Яндекс Еда", src: "" },
-    { name: "Кухня на районе", src: "" },
-    { name: "Veselovka", src: "" },
-    { name: "Яндекс Плюс", src: "" },
-    { name: "Золотая маска", src: "" },
-  ];
 
   return (
     <div
@@ -352,7 +337,7 @@ export default function Page() {
       }}
     >
       <header className="relative z-40 border-b border-white/10">
-        <div className="mx-auto flex w-full items-center justify-between px-4 py-4 md:px-8 xl:px-10 2xl:px-6">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Image src="/logo.svg" alt="Либо/Либо" width={160} height={36} priority />
           <button
             type="button"
@@ -395,7 +380,7 @@ export default function Page() {
         <div className="absolute inset-0 bg-[#0a0b0f]" />
         <div
           className={cn(
-            "mx-auto flex h-full w-full flex-col px-4 py-5 transition-all duration-300 md:px-8 xl:px-10 2xl:px-6",
+            "mx-auto flex h-full w-full max-w-6xl flex-col px-6 py-5 transition-all duration-300",
             isMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0",
           )}
         >
@@ -427,15 +412,15 @@ export default function Page() {
       </div>
 
       <main>
-        <div className="mx-auto w-full px-4 pt-14 pb-10 md:px-8 md:pt-20 md:pb-14 xl:px-10 2xl:px-6">
+        <div className="mx-auto w-full max-w-6xl px-6 pt-14 pb-10 md:pt-20 md:pb-14">
           <div className="grid gap-10 md:grid-cols-12 md:gap-8">
             <div className="md:col-span-7">
-              <h1 className={cn("mt-5", TYPO.display)}>
+              <h1 className="mt-5 text-[clamp(2.5rem,7.2vw,5.25rem)] font-bold leading-[1.01]">
                 Подкасты, которые <HandUnderline>работают</HandUnderline> на ваш{" "}
                 <HandUnderline>бренд</HandUnderline>
               </h1>
 
-              <p className={cn("mt-6 max-w-xl text-white/80", TYPO.lead)}>
+              <p className="mt-6 max-w-xl text-[clamp(1.05rem,1.7vw,1.28rem)] leading-relaxed text-white/80">
                 Реклама в подкастах Либо/Либо и продакшен —{" "}
                 <span className="block">от задумки до публикации</span>
               </p>
@@ -446,7 +431,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className="hidden md:col-span-5 md:block">
+            <div className="md:col-span-5">
               <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-6 md:p-7">
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
@@ -462,24 +447,6 @@ export default function Page() {
           </div>
         </div>
 
-        <section aria-label="Логотипы клиентов" className="border-y border-white/10 bg-white/[0.01]">
-          <div className="mx-auto w-full px-4 py-5 md:px-8 xl:px-10 2xl:px-6">
-            <div className="logo-marquee-mask">
-              <div className="logo-marquee-track">
-                {[...logoStrip, ...logoStrip].map((logo, idx) => (
-                  <div key={`${logo.name}-${idx}`} className="logo-pill">
-                    {logo.src ? (
-                      <Image src={logo.src} alt={logo.name} width={120} height={28} className="h-7 w-auto object-contain opacity-80" />
-                    ) : (
-                      <span className="logo-pill-placeholder">{logo.name}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
         <Divider />
 
         <Section
@@ -493,8 +460,8 @@ export default function Page() {
                 <div className="flex h-full flex-col">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <div className={cn(TYPO.cardTitle, "text-white")}>{f.title}</div>
-                      <div className="mt-2 text-sm font-medium uppercase tracking-[0.08em] text-white/60">{f.duration}</div>
+                      <div className="text-xl font-bold leading-tight">{f.title}</div>
+                      <div className="mt-2 text-base font-bold text-white/70">{f.duration}</div>
                     </div>
                     {f.featured ? (
                       <span
@@ -506,10 +473,10 @@ export default function Page() {
                     ) : null}
                   </div>
 
-                  <p className={cn("mt-4 text-white/80", TYPO.body)}>{f.desc}</p>
+                  <p className="mt-4 text-base leading-relaxed text-white/80">{f.desc}</p>
 
                   <div className="mt-6">
-                    <ul className={cn("mt-3 space-y-2 text-white/80", TYPO.body)}>
+                    <ul className="mt-3 space-y-2 text-base text-white/80">
                       {f.benefits.map((x) => (
                         <li key={x} className="flex gap-3">
                           <span className="mt-2 h-1.5 w-1.5 shrink-0" style={{ backgroundColor: COLORS.accent }} />
@@ -539,21 +506,21 @@ export default function Page() {
             </p>
           </div>
 
-          <h3 className={cn("mb-6 text-white", TYPO.cardTitle)}>
+          <h3 className="mb-6 text-[clamp(1.6rem,2.8vw,2.3rem)] font-bold">
             Кому подойдет
           </h3>
 
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-2">
             {audiences.map((a) => (
               <Card key={a.title}>
-                <div className={cn(TYPO.cardTitle, "text-white")}>{a.title}</div>
-                <p className={cn("mt-3 text-white/80", TYPO.body)}>{a.text}</p>
+                <div className="text-lg font-bold leading-tight">{a.title}</div>
+                <p className="mt-3 text-base leading-relaxed text-white/80">{a.text}</p>
               </Card>
             ))}
           </div>
 
           <div className="mt-12">
-            <h3 className={cn(TYPO.sectionTitle, "text-white")}>
+            <h3 className="text-[clamp(1.8rem,3.2vw,2.8rem)] font-bold">
               Как устроена <HandUnderline>работа</HandUnderline>
             </h3>
 
@@ -572,11 +539,11 @@ export default function Page() {
                         <div className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: COLORS.accent }}>
                           Шаг {s.n}
                         </div>
-                        <div className={cn("mt-2 text-white", TYPO.cardTitle)}>
+                        <div className="mt-2 text-[clamp(1.05rem,2vw,1.5rem)] font-bold leading-tight text-white">
                           {s.title}
                         </div>
                         {s.text ? (
-                          <p className={cn("mt-2 text-white/82 md:mt-3", TYPO.body)}>{s.text}</p>
+                          <p className="mt-2 text-sm leading-relaxed text-white/82 md:mt-3 md:text-base">{s.text}</p>
                         ) : null}
                       </div>
                     </div>
@@ -594,10 +561,10 @@ export default function Page() {
                       <div className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: COLORS.accent }}>
                         Дополнительно
                       </div>
-                      <div className={cn("mt-2 text-white", TYPO.cardTitle)}>
+                      <div className="mt-2 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight text-white">
                         Займемся продвижением
                       </div>
-                      <p className={cn("mt-2 text-white/82 md:mt-3", TYPO.body)}>
+                      <p className="mt-2 text-sm leading-relaxed text-white/82 md:mt-3 md:text-base">
                         Поможем раскрутиться на площадках и собрать больше аудитории.
                       </p>
                     </div>
@@ -624,8 +591,8 @@ export default function Page() {
                     <CoverPlaceholder label={w.title} src={w.cover} />
                   )}
                   <div>
-                    <div className={cn("text-white md:text-[1.3rem]", TYPO.cardTitle)}>{w.title} — {w.company}</div>
-                    <p className={cn("mt-2 text-white/80 md:mt-3", TYPO.body)}>{w.goal}</p>
+                    <div className="text-lg font-bold leading-tight md:text-xl">{w.title} — {w.company}</div>
+                    <p className="mt-2 text-sm leading-relaxed text-white/80 md:mt-3 md:text-base">{w.goal}</p>
                   </div>
                   <div className="pt-0.5 md:mt-auto md:min-h-6 md:pt-1">
                     {w.link ? (
@@ -716,7 +683,7 @@ export default function Page() {
               <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-7">
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
-                  <p className={cn("text-white/85", TYPO.lead)}>
+                  <p className="text-[clamp(1.15rem,1.9vw,1.45rem)] leading-relaxed text-white/85">
                     Или просто напишите нам на{" "}
                     <a href="mailto:podcast@libolibo.ru" className="font-bold text-white hover:opacity-90">
                       podcast@libolibo.me
@@ -730,7 +697,7 @@ export default function Page() {
         </Section>
 
         <footer className="border-t border-white/10">
-          <div className="mx-auto flex w-full flex-col gap-3 px-4 py-10 md:flex-row md:items-center md:justify-between md:px-8 xl:px-10 2xl:px-6">
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-10 md:flex-row md:items-center md:justify-between">
             <div className="text-sm font-light text-white/50">
               © Студия Либо/Либо
             </div>
