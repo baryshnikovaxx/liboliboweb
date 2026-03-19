@@ -260,7 +260,7 @@ export default function Page() {
 
   const audiences = [
     {
-      title: "Бренды и компании",
+      title: "Любые бренды и компании",
       text: "Чтобы построить доверительные отношения с клиентами и подсветить вашу экспертизу.",
     },
     {
@@ -538,6 +538,10 @@ export default function Page() {
               Возьмем на себя все этапы работы: от задумки и концепции до публикации на платформах.
             </p>
           </div>
+
+          <h3 className={cn("mb-6 text-white", TYPO.cardTitle)}>
+            Кому подойдет
+          </h3>
 
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-2">
             {audiences.map((a) => (
