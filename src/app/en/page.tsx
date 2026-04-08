@@ -511,7 +511,7 @@ export default function EnPage() {
       <main>
         <div className="mx-auto w-full max-w-6xl px-6 pt-14 pb-10 md:pt-20 md:pb-14">
           <div className="grid gap-10 md:grid-cols-12 md:gap-8">
-            <div className="md:col-span-6">
+            <div className="order-2 md:order-1 md:col-span-6">
               <h1 className="mt-5 text-[clamp(2.5rem,7.2vw,5.25rem)] font-bold leading-[1.01]">
                 Podcasts that <HandUnderline>work</HandUnderline> for your{" "}
                 <HandUnderline>brand</HandUnderline>
@@ -528,7 +528,7 @@ export default function EnPage() {
               </div>
             </div>
 
-            <div className="md:col-span-6">
+            <div className="order-1 md:order-2 md:col-span-6">
               <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-5 md:p-6">
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
