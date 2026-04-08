@@ -533,11 +533,13 @@ export default function EnPage() {
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
                   <div className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-white/65">Our latest shows</div>
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                     {heroShows.map((show) => (
                       <a key={show.title} href={show.link} target="_blank" rel="noreferrer" className="group block">
-                        <CoverPlaceholder label={show.title} src={show.cover} />
-                        <span className="mt-2 block text-sm text-white/80 transition group-hover:text-[#FF383C]">
+                        <div className="overflow-hidden">
+                          <CoverPlaceholder label={show.title} src={show.cover} />
+                        </div>
+                        <span className="mt-2 block text-base text-white/85 transition group-hover:text-[#FF383C]">
                           {show.title}
                         </span>
                       </a>
@@ -715,10 +717,10 @@ export default function EnPage() {
             {testimonials.map((x) => (
               <Card key={x.author}>
                 <div className="flex h-full flex-col">
-                  <div className="mb-4 text-3xl leading-none text-[#FF383C]">“</div>
                   <p className="text-[1.03rem] leading-relaxed text-white/90">{x.quote}</p>
-                  <div className="mt-6 border-t border-white/15 pt-4">
-                    <div className="text-base font-bold text-white">{x.author}</div>
+                  <div className="mt-7">
+                    <div className="text-base font-semibold text-white">{x.author}</div>
+                    <div className="mt-2 h-px w-[56%] bg-[#FF383C]/80" />
                     <p className="mt-1 text-sm text-white/70">{x.role}</p>
                   </div>
                 </div>
