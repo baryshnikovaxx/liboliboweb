@@ -147,10 +147,19 @@ function Divider() {
 }
 
 function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: string }) {
-  if (src) {
+  const [hasImageError, setHasImageError] = useState(false);
+
+  if (src && !hasImageError) {
     return (
       <div className="relative aspect-square w-full overflow-hidden bg-white/5">
-        <Image src={src} alt={label} fill className="object-cover" sizes="(min-width: 768px) 240px, 45vw" />
+        <Image
+          src={src}
+          alt={label}
+          fill
+          className="object-cover"
+          sizes="(min-width: 768px) 240px, 45vw"
+          onError={() => setHasImageError(true)}
+        />
       </div>
     );
   }
@@ -301,48 +310,56 @@ export default function EnPage() {
       company: "The New York Times",
       link: "https://www.nytimes.com/column/the-idiot",
       goal: "Co-produced by Libo/Libo and Serial Productions for The New York Times.",
+      cover: "/en/shows/the-idiot.jpg",
     },
     {
       title: "Women In The Building",
       company: "The Aurora Tech Award",
       link: "https://pc.st/en/1855578706",
       goal: "Podcast for female entrepreneurs in emerging markets. Part business playbook, part community of female founders.",
+      cover: "/en/shows/women-in-the-building.jpg",
     },
     {
       title: "Eight Fights",
       company: "This American Life",
       link: "https://www.thisamericanlife.org/807/eight-fights",
       goal: "An iconic weekly podcast with millions of listeners around the world.",
+      cover: "/en/shows/eight-fights.jpg",
     },
     {
       title: "CTRL SHIFT!",
       company: "Humbleteam",
       link: "https://podcast.humbleteam.com",
       goal: "A podcast about changing perspective and turning challenges into opportunities.",
+      cover: "/en/shows/ctrl-shift.jpg",
     },
     {
       title: "Next Year in Moscow",
       company: "The Economist",
       link: "https://www.economist.com/audio/podcasts/next-year-in-moscow",
       goal: "Arkady Ostrovsky speaks with free-thinking Russians who left the country after the full-scale invasion of Ukraine.",
+      cover: "/en/shows/next-year-in-moscow.jpg",
     },
     {
       title: "TechStart",
       company: "TripleTen",
       link: "https://tripleten.com/special/podcast/",
       goal: "Podcast about changing careers into tech, with real stories from coding bootcamp students.",
+      cover: "/en/shows/techstart.jpg",
     },
     {
       title: "Dmitry Sitkovetsky: Keeping the Flame",
       company: "Independent project",
       link: "https://pc.st/1854819032",
       goal: "A family memoir, a portrait of the Russian intelligentsia, and a journey through music and exile.",
+      cover: "/en/shows/keeping-the-flame.jpg",
     },
     {
       title: "Harbin",
       company: "Memorial",
       link: "https://pc.st/1677312850/info",
       goal: "Stories of emigrants who fled the Russian Revolution to the Chinese city of Harbin.",
+      cover: "/en/shows/harbin.jpg",
     },
   ];
 
@@ -627,7 +644,7 @@ export default function EnPage() {
               <Card key={w.title}>
                 <div className="flex h-auto flex-col gap-3 md:h-full md:gap-4">
                   <a href={w.link} target="_blank" rel="noreferrer" className="block">
-                    <CoverPlaceholder label={w.title} />
+                    <CoverPlaceholder label={w.title} src={w.cover} />
                   </a>
                   <div>
                     <div className="text-lg font-bold leading-tight md:text-xl">{w.title}</div>
