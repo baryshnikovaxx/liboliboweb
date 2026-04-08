@@ -715,10 +715,8 @@ export default function EnPage() {
             {testimonials.map((x) => (
               <Card key={x.author}>
                 <div className="flex h-full flex-col">
-                  <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-xs font-bold uppercase tracking-[0.08em] text-white/80">
-                    {x.author.split(" ").slice(0, 2).map((part) => part[0]).join("")}
-                  </div>
-                  <p className="text-[1.03rem] leading-relaxed text-white/85">"{x.quote}"</p>
+                  <div className="mb-4 text-3xl leading-none text-[#FF383C]">“</div>
+                  <p className="text-[1.03rem] leading-relaxed text-white/90">{x.quote}</p>
                   <div className="mt-6 border-t border-white/15 pt-4">
                     <div className="text-base font-bold text-white">{x.author}</div>
                     <p className="mt-1 text-sm text-white/70">{x.role}</p>
