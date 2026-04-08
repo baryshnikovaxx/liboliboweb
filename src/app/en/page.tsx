@@ -523,8 +523,8 @@ export default function EnPage() {
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button variant="secondary" onClick={() => scrollToId("production")}>Create a podcast</Button>
                 <Button onClick={() => scrollToId("advertising")}>Place an ad</Button>
+                <Button variant="secondary" onClick={() => scrollToId("production")}>Create a podcast</Button>
               </div>
             </div>
 
@@ -532,16 +532,12 @@ export default function EnPage() {
               <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-6 md:p-7">
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
-                  <div className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-white/65">Our latest shows</div>
-                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                  <div className="grid grid-cols-2 gap-4">
                     {heroShows.map((show) => (
-                      <a key={show.title} href={show.link} target="_blank" rel="noreferrer" className="group block">
-                        <div className="overflow-hidden">
+                      <a key={show.title} href={show.link} target="_blank" rel="noreferrer" className="block">
+                        <div className="transition hover:opacity-90">
                           <CoverPlaceholder label={show.title} src={show.cover} />
                         </div>
-                        <span className="mt-2 block text-base text-white/85 transition group-hover:text-[#FF383C]">
-                          {show.title}
-                        </span>
                       </a>
                     ))}
                   </div>
