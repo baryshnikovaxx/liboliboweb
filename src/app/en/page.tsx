@@ -204,8 +204,13 @@ function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: stri
 
 export default function EnPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
   const [knownEmail, setKnownEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [isThankYouOpen, setIsThankYouOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -737,12 +742,43 @@ export default function EnPage() {
               <Card>
                 <form
                   className="space-y-4"
-                  onSubmit={(e) => {
+                  onSubmit={async (e) => {
                     e.preventDefault();
-                    if (typeof window !== "undefined") {
-                      window.localStorage.setItem("business_contact_email", knownEmail.trim());
+                    if (isSubmitting) return;
+                    setSubmitError("");
+                    setIsSubmitting(true);
+                    try {
+                      const response = await fetch("/api/leads", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          locale: "en",
+                          page: "/",
+                          name,
+                          company,
+                          email: knownEmail,
+                          message,
+                        }),
+                      });
+
+                      if (!response.ok) {
+                        throw new Error("submit_failed");
+                      }
+
+                      if (typeof window !== "undefined") {
+                        window.localStorage.setItem("business_contact_email", knownEmail.trim());
+                      }
+                      setName("");
+                      setCompany("");
+                      setMessage("");
+                      setIsThankYouOpen(true);
+                    } catch {
+                      setSubmitError("Could not send the request right now. Please try again or email us directly.");
+                    } finally {
+                      setIsSubmitting(false);
                     }
-                    setIsThankYouOpen(true);
                   }}
                 >
                   <div className="grid gap-4 md:grid-cols-2">
@@ -751,6 +787,9 @@ export default function EnPage() {
                       <input
                         name="name"
                         autoComplete="name"
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
                         placeholder="your name"
                       />
@@ -760,6 +799,8 @@ export default function EnPage() {
                       <input
                         name="organization"
                         autoComplete="organization"
+                        value={company}
+                        onChange={(e) => setCompany(e.target.value)}
                         className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
                         placeholder="your company"
                       />
@@ -774,6 +815,7 @@ export default function EnPage() {
                       type="email"
                       name="email"
                       autoComplete="email"
+                      required
                       value={knownEmail}
                       onChange={(e) => setKnownEmail(e.target.value)}
                       className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
@@ -787,14 +829,20 @@ export default function EnPage() {
                       rows={5}
                       name="message"
                       autoComplete="off"
+                      required
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                       className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
                       placeholder="type your request here"
                     />
                   </div>
 
                   <div className="pt-2">
-                    <Button>Send request</Button>
+                    <Button>{isSubmitting ? "Sending..." : "Send request"}</Button>
                   </div>
+                  {submitError ? (
+                    <p className="text-sm leading-relaxed text-[#FF7D80]">{submitError}</p>
+                  ) : null}
                 </form>
               </Card>
             </div>
