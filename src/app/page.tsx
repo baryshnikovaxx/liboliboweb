@@ -50,11 +50,13 @@ function Button({
   children,
   variant = "primary",
   onClick,
+  type = "button",
   className = "",
 }: {
   children: React.ReactNode;
   variant?: "primary" | "secondary";
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
   className?: string;
 }) {
   const base =
@@ -65,7 +67,7 @@ function Button({
       : "border border-white/30 text-white hover:border-white/60 hover:bg-white/5 focus:ring-white/60";
 
   return (
-    <button className={cn(base, styles, className)} onClick={onClick} type="button">
+    <button className={cn(base, styles, className)} onClick={onClick} type={type}>
       {children}
     </button>
   );
@@ -647,7 +649,7 @@ export default function Page() {
                           page: "/",
                           name,
                           company,
-                          email: contact,
+                          contact,
                           message,
                         }),
                       });
@@ -701,8 +703,8 @@ export default function Page() {
                       Контакты (почта / tg)
                     </label>
                     <input
-                      type="email"
-                      name="email"
+                      type="text"
+                      name="contact"
                       autoComplete="email"
                       required
                       value={contact}
@@ -726,7 +728,7 @@ export default function Page() {
                   </div>
 
                   <div className="pt-2">
-                    <Button>{isSubmitting ? "Отправляем..." : "Отправить запрос"}</Button>
+                    <Button type="submit">{isSubmitting ? "Отправляем..." : "Отправить запрос"}</Button>
                   </div>
                   {submitError ? (
                     <p className="text-sm leading-relaxed text-[#FF7D80]">{submitError}</p>
