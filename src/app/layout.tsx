@@ -30,15 +30,11 @@ const futura = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://business.libolibo.me"),
-  title: "Либо/Либо — подкасты для брендов",
+  title: "Libo/Libo - Podcasts that work for your brand",
   description:
-    "Реклама в подкастах студии Либо/Либо и продакшен подкастов: от идеи и концепции до публикации на платформах.",
+    "Advertising in Libo/Libo podcasts and podcast production services - from idea and concept to launch on all major platforms.",
   alternates: {
     canonical: "/",
-    languages: {
-      ru: "/",
-      en: "/en",
-    },
   },
   icons: {
     icon: "/favicon.ico",
@@ -46,26 +42,26 @@ export const metadata: Metadata = {
     apple: "/favicon.ico",
   },
   openGraph: {
-    title: "Подкасты, которые работают на ваш бренд",
+    title: "Podcasts that work for your brand",
     description:
-      "Реклама в подкастах Либо/Либо и продакшен: берём на себя всё от идеи и сценария до публикации.",
+      "Advertising in Libo/Libo studio podcasts and podcast production - from idea to launch.",
     siteName: "Либо/Либо",
-    locale: "ru_RU",
+    locale: "en_US",
     type: "website",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Либо/Либо — подкасты для брендов",
+        alt: "Libo/Libo - Podcasts that work for your brand",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Подкасты, которые работают на ваш бренд",
+    title: "Podcasts that work for your brand",
     description:
-      "Реклама в подкастах Либо/Либо и продакшен: от задумки до публикации на платформах.",
+      "Advertising in Libo/Libo podcasts and podcast production - from idea to launch.",
     images: ["/opengraph-image"],
   },
 };
@@ -76,7 +72,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
+    <html lang="en">
       <body className={futura.className}>
         {children}
       </body>
