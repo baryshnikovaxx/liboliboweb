@@ -231,14 +231,14 @@ export default function EnPage() {
       title: "Jingle",
       duration: "up to two minutes",
       desc:
-        "A concise integration without complex mechanics. We add a text block to the episode description with partner information, a link, and a promo code. Minimum of two episodes.",
+        "A concise integration without complex mechanics. We'll add a text block to the episode description with partner information, a link, and a promo code. Minimum of two episodes.",
       benefits: ["A perfect option for a first introduction to podcast advertising."],
     },
     {
       title: "Partner segment",
       duration: "up to three minutes",
       desc:
-        "A native format that listeners genuinely enjoy. The brand message blends organically into the podcast's tone of voice. Stories from hosts and listeners, experiments, tips, or playful bits - we develop the idea together with the partner. We add a text block to the episode description with partner information, a link, and a promo code. Minimum of three episodes.",
+        "A native format that listeners genuinely enjoy. The brand message blends organically into the podcast's tone of voice. Stories from hosts and listeners, experiments, tips, or playful bits - we develop the idea together with the partner. We'll add a text block to the episode description with partner information, a link, and a promo code. Minimum of three episodes.",
       benefits: ["A chance to tell a deeper story about your product."],
     },
     {
@@ -295,7 +295,7 @@ export default function EnPage() {
     {
       n: "5",
       title: "Develop the visual and written identity",
-      text: "We craft the podcast title and descriptions and design the cover art.",
+      text: "We craft the podcast title and descriptions (for the show and each episode) and design the cover art.",
     },
     {
       n: "6",
@@ -330,14 +330,14 @@ export default function EnPage() {
       title: "CTRL SHIFT!",
       company: "Humbleteam",
       link: "https://podcast.humbleteam.com",
-      goal: "A podcast about changing perspective and turning challenges into opportunities.",
+      goal: "Podcast explores how changing perspective can turn challenges into opportunities.",
       cover: "/en/shows/ctrl-shift.jpg",
     },
     {
       title: "Next Year in Moscow",
       company: "The Economist",
       link: "https://www.economist.com/audio/podcasts/next-year-in-moscow",
-      goal: "Arkady Ostrovsky speaks with free-thinking Russians who left the country after the full-scale invasion of Ukraine.",
+      goal: "Arkady Ostrovsky travels across the world speaking to free-thinking Russians who left the country when the full-scale invasion of Ukraine began in 2022.",
       cover: "/en/shows/next-year-in-moscow.jpg",
     },
     {
@@ -358,7 +358,7 @@ export default function EnPage() {
       title: "Harbin",
       company: "Memorial",
       link: "https://pc.st/1677312850/info",
-      goal: "Stories of emigrants who fled the Russian Revolution to the Chinese city of Harbin.",
+      goal: "Stories of emigrants who fled the Russian Revolution to the Chinese city of Harbin (podcast in German).",
       cover: "/en/shows/harbin.jpg",
     },
   ];
@@ -372,13 +372,13 @@ export default function EnPage() {
     },
     {
       quote:
-        "The team at Libo/Libo studio go above and beyond wherever they can. Yulia has been a brilliant project manager in keeping everyone on the same page and keeping comms consistent between teams. They do things when they say they do and are open to feedback and building a strong working relationship. It has been a pleasure working with them.",
+        "The team at Libo/Libo studio go above and beyond wherever they can. Yulia has been a brilliant project manager in keeping everyone on the same page, keeping comms consistent between the teams and everyone on the same page. They do things when they say they do and more importantly are open to feedback and building the working relationship and finding a groove together. It's been a pleasure working with them.",
       author: "Bella Ghassemi-Smith",
       role: "Head of the Aurora Tech Award",
     },
     {
       quote:
-        "We were so excited to work with Libo/Libo. We came as experts in design and AI and knew absolutely nothing about podcasts and production. The team took full ownership, guided us at every step, and brought our podcast to a successful release. In the end, the podcast made it to top charts in the US and Canada.",
+        "We were so excited to work with Libo/Libo! We came to them as experts in design and AI - we knew absolutely nothing about podcasts and production. How to work with an audience, how to prepare speakers, how to structure a season - all of this was completely unknown territory for us. The Libo/Libo team took all of that fully on themselves - they walked us through the entire process, gave us guidance at every step, and brought our podcast to a successful release. In the end, the podcast made it to the top charts in the US and Canada. Without Libo/Libo, we definitely wouldn't have made such a great podcast.",
       author: "Sergey Krasotin",
       role: "Design Lead and Co-Founder at Humbleteam",
     },
@@ -520,9 +520,7 @@ export default function EnPage() {
             </p>
           </div>
 
-          <h3 className="mb-6 text-[clamp(1.6rem,2.8vw,2.3rem)] font-bold">
-            Who it is for
-          </h3>
+          <h3 className="mb-6 text-[clamp(1.6rem,2.8vw,2.3rem)] font-bold">Who it's for</h3>
 
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-2">
             {audiences.map((a) => (
@@ -592,7 +590,7 @@ export default function EnPage() {
         <Section
           id="advertising"
           title={<><span>Advertising in </span><HandUnderline>Libo/Libo podcasts</HandUnderline></>}
-          subtitle="Bring your brand to a loyal, curious, and globally mobile Russian-speaking audience."
+          subtitle="Bring your brand to a loyal, curious, and globally mobile Russian-speaking audience"
         >
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
             {formats.map((f) => (
@@ -755,7 +753,7 @@ export default function EnPage() {
                     <a href="mailto:podcast@libolibo.me" className="font-bold text-white hover:opacity-90">
                       podcast@libolibo.me
                     </a>
-                    , and we will get back to you shortly.
+                    , and we'll get back to you shortly.
                   </p>
                 </div>
               </div>
