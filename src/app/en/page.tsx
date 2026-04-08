@@ -50,11 +50,13 @@ function Button({
   children,
   variant = "primary",
   onClick,
+  type = "button",
   className = "",
 }: {
   children: React.ReactNode;
   variant?: "primary" | "secondary";
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
   className?: string;
 }) {
   const base =
@@ -65,7 +67,7 @@ function Button({
       : "border border-white/30 text-white hover:border-white/60 hover:bg-white/5 focus:ring-white/60";
 
   return (
-    <button className={cn(base, styles, className)} onClick={onClick} type="button">
+    <button className={cn(base, styles, className)} onClick={onClick} type={type}>
       {children}
     </button>
   );
@@ -838,7 +840,7 @@ export default function EnPage() {
                   </div>
 
                   <div className="pt-2">
-                    <Button>{isSubmitting ? "Sending..." : "Send request"}</Button>
+                    <Button type="submit">{isSubmitting ? "Sending..." : "Send request"}</Button>
                   </div>
                   {submitError ? (
                     <p className="text-sm leading-relaxed text-[#FF7D80]">{submitError}</p>
