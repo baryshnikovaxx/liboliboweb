@@ -123,7 +123,7 @@ function Section({
           </h2>
         ) : null}
         {subtitle ? (
-          <p className="mt-4 max-w-3xl text-[clamp(1.05rem,1.7vw,1.3rem)] leading-relaxed text-white/80">
+          <p className="mt-4 max-w-4xl text-[clamp(1.05rem,1.7vw,1.25rem)] leading-relaxed text-white/80">
             {subtitle}
           </p>
         ) : null}
@@ -146,11 +146,20 @@ function Divider() {
   return <div className="h-px w-full bg-white/10" />;
 }
 
-function CoverPlaceholder({ label = "Обложка", src }: { label?: string; src?: string }) {
-  if (src) {
+function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: string }) {
+  const [hasImageError, setHasImageError] = useState(false);
+
+  if (src && !hasImageError) {
     return (
       <div className="relative aspect-square w-full overflow-hidden bg-white/5">
-        <Image src={src} alt={label} fill className="object-cover" sizes="(min-width: 768px) 240px, 45vw" />
+        <Image
+          src={src}
+          alt={label}
+          fill
+          className="object-cover"
+          sizes="(min-width: 768px) 240px, 45vw"
+          onError={() => setHasImageError(true)}
+        />
       </div>
     );
   }
@@ -184,8 +193,8 @@ function CoverPlaceholder({ label = "Обложка", src }: { label?: string; s
           />
         </svg>
       </div>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">
+      <div className="absolute inset-0 flex items-center justify-center px-3 text-center">
+        <span className="text-xs font-bold uppercase tracking-[0.16em] text-white/60">
           {label}
         </span>
       </div>
@@ -193,15 +202,15 @@ function CoverPlaceholder({ label = "Обложка", src }: { label?: string; s
   );
 }
 
-export default function Page() {
+export default function EnPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
-  const [contact, setContact] = useState("");
+  const [knownEmail, setKnownEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [isThankYouOpen, setIsThankYouOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const [isThankYouOpen, setIsThankYouOpen] = useState(false);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -218,9 +227,9 @@ export default function Page() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const savedContact = window.localStorage.getItem("business_contact_value");
-    if (savedContact) {
-      setContact(savedContact);
+    const savedEmail = window.localStorage.getItem("business_contact_email");
+    if (savedEmail) {
+      setKnownEmail(savedEmail);
     }
   }, []);
 
@@ -231,111 +240,193 @@ export default function Page() {
   }, [isThankYouOpen]);
 
   const menuItems = [
-    { to: "advertising", label: "Реклама" },
-    { to: "production", label: "Продакшен" },
-    { to: "works", label: "Работы" },
-    { to: "contacts", label: "Контакты" },
+    { to: "production", label: "Production" },
+    { to: "advertising", label: "Advertising" },
+    { to: "shows", label: "Shows" },
+    { to: "reviews", label: "Reviews" },
+    { to: "contacts", label: "Contacts" },
   ];
 
   const formats = [
     {
-      title: "Джингл",
-      duration: "до двух минут",
+      title: "Jingle",
+      duration: "up to two minutes",
       desc:
-        "Лаконичная интеграция без сложной механики. В описание эпизода добавим текстовый блок с информацией о партнере, ссылкой и промокодом. Минимум два эпизода.",
-      benefits: ["Идеальный вариант для первого знакомства с подкастами"],
+        "A concise integration without complex mechanics. We'll add a text block to the episode description with partner information, a link, and a promo code. Minimum of two episodes.",
+      benefits: ["A perfect option for a first introduction to podcast advertising."],
     },
     {
-      title: "Партнерская рубрика",
-      duration: "до трех минут",
+      title: "Partner segment",
+      duration: "up to three minutes",
       desc:
-        "Нативный формат, который любят слушатели. Рекламное сообщение органично проникает в ToV подкаста. Истории от ведущих и слушателей, эксперименты, советы или хохмы: идею придумываем вместе с партнером. В описание эпизода добавим текстовый блок с информацией о партнере, ссылкой и промокодом. Минимум три эпизода.",
-      benefits: ["Возможность рассказать подробную историю о продукте"],
+        "A native format that listeners genuinely enjoy. The brand message blends organically into the podcast's tone of voice. Stories from hosts and listeners, experiments, tips, or playful bits - we develop the idea together with the partner. We'll add a text block to the episode description with partner information, a link, and a promo code. Minimum of three episodes.",
+      benefits: ["A chance to tell a deeper story about your product."],
     },
     {
-      title: "Эксклюзивное спонсорство сезона",
-      duration: "10 эпизодов сезона, интеграция в каждом выпуске: анонс партнера в начале и рубрика в середине (2-3 минуты)",
+      title: "Exclusive season sponsorship",
+      duration:
+        "Length: 10 episodes in one season, with integration in every episode. A partner mention at the beginning and a two-three-minute segment in the middle.",
       desc:
-        "Серийный формат с максимальным охватом аудитории подкаста. Вы будете единственным партнером сезона. В описание каждого эпизода добавим текстовый блок со ссылкой и промокодом.",
-      benefits: ["Самый быстрый рост узнаваемости и доверия к бренду"],
+        "A serialized format with maximum audience reach. You will be the only partner of the season - and that is a big deal. We add a text block with a link and promo code to each episode description.",
+      benefits: ["The strongest boost for brand awareness and trust."],
       featured: true,
     },
   ];
 
   const audiences = [
     {
-      title: "Бренды и компании",
-      text: "Чтобы построить доверительные отношения с клиентами и подсветить вашу экспертизу.",
+      title: "Brands and companies",
+      text: "To build long-term trust with your audience and highlight your expertise.",
     },
     {
-      title: "Сервисы и IT",
-      text: "Чтобы наладить контакт с аудиторией и объяснять сложное простым языком.",
+      title: "Services and IT",
+      text: "To connect with your audience and explain complex ideas in simple terms.",
     },
     {
-      title: "HR и внутренние коммуникации",
-      text: "Чтобы усилить бренд работодателя и укрепить корпоративную культуру.",
+      title: "HR and internal communications teams",
+      text: "To strengthen your employer brand and build corporate culture.",
     },
     {
-      title: "Эксперты и фаундеры",
-      text: "Чтобы развить и укрепить личный бренд.",
+      title: "Experts and founders",
+      text: "To build and grow your personal brand.",
     },
   ];
 
   const steps = [
     {
       n: "1",
-      title: "Определим формат и разработаем концепцию",
-      text: "Определим цели, аудиторию и tone of voice.",
+      title: "Define the format and develop the concept",
+      text: "We clarify goals, target audience, and tone of voice.",
     },
     {
       n: "2",
-      title: "Составим поэпизодный план, соберем материал и продумаем драматургию",
-      text: "",
+      title: "Develop the content plan",
+      text: "Create an episode plan, gather materials, and shape the narrative arc.",
     },
     {
       n: "3",
-      title: "Подберем ведущего и организуем записи",
-      text: "Срежиссируем процесс, даже если ведущие и герои живут в разных частях планеты.",
+      title: "Select a host and organize recordings",
+      text: "We direct the process, even if hosts and guests are in different parts of the world.",
     },
     {
       n: "4",
-      title: "Смонтируем и отредактируем эпизоды",
-      text: "Напишем джингл, очистим звук и подкорректируем недочеты.",
+      title: "Edit and produce the episodes",
+      text: "We create the sound design, clean up background noise, and polish every detail.",
     },
     {
       n: "5",
-      title: "Разработаем визуальное и текстовое оформление",
-      text: "Придумаем название и описание подкаста (и каждого эпизода), задизайним обложку.",
+      title: "Develop the visual and written identity",
+      text: "We craft the podcast title and descriptions (for the show and each episode) and design the cover art.",
     },
     {
       n: "6",
-      title: "Опубликуем подкаст",
-      text: "Создадим личный кабинет на хостинге, сделаем релиз на всех платформах.",
+      title: "Publish the podcast",
+      text: "We set up hosting, distribute it to all major platforms, and manage the release.",
     },
   ];
 
-  const works = [
-    { title: "Торг уместен", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Привлечение новой аудитории", cover: "/case1.jpg" },
-    { title: "Не все включено", company: "Veselovka Experience", link: "https://pc.st/1850920893", goal: "Повышение узнаваемости бренда", cover: "/case2.jpg" },
-    { title: "Уже в пути", company: "Яндекс Еда", link: "https://music.yandex.ru/album/13896573", goal: "Повышение лояльности аудитории", cover: "/case3.jpg" },
-    { title: "Хроники еды", company: "Кухня на районе", link: "https://pc.st/1520728618", goal: "Вовлечение и удержание аудитории", cover: "/case4.jpg" },
+  const shows = [
     {
-      title: "Взрослые — это мы",
-      company: "Яндекс Плюс Детям + Ясно",
-      link: "https://music.yandex.ru/album/33305638",
-      goal: "Привлечение аудитории и повышение узнаваемости",
-      cover: "/case5.jpg",
+      title: "The Idiot, five-part season of Serial podcast",
+      company: "The New York Times",
+      link: "https://www.nytimes.com/column/the-idiot",
+      goal: "Co-produced by Libo/Libo and Serial Productions for The New York Times.",
+      cover: "/en/shows/the-idiot.jpg",
     },
     {
-      title: "Как посмотреть",
-      company: "Золотая маска",
-      link: "https://pc.st/1523674546",
-      goal: "Привлечение аудитории",
-      cover: "/case6.jpg",
+      title: "Women In The Building",
+      company: "The Aurora Tech Award",
+      link: "https://pc.st/en/1855578706",
+      goal: "Podcast for female entrepreneurs in emerging markets. Part business playbook, part community of female founders.",
+      cover: "/en/shows/women-in-the-building.jpg",
     },
-    { title: "Город, в котором", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Повышение лояльности аудитории", cover: "/case7.jpg" },
+    {
+      title: "Eight Fights",
+      company: "This American Life",
+      link: "https://www.thisamericanlife.org/807/eight-fights",
+      goal: "An iconic weekly podcast with millions of listeners around the world.",
+      cover: "/en/shows/eight-fights.jpg",
+    },
+    {
+      title: "CTRL SHIFT!",
+      company: "Humbleteam",
+      link: "https://podcast.humbleteam.com",
+      goal: "Podcast explores how changing perspective can turn challenges into opportunities.",
+      cover: "/en/shows/ctrl-shift.jpg",
+    },
+    {
+      title: "Next Year in Moscow",
+      company: "The Economist",
+      link: "https://www.economist.com/audio/podcasts/next-year-in-moscow",
+      goal: "Arkady Ostrovsky travels across the world speaking to free-thinking Russians who left the country when the full-scale invasion of Ukraine began in 2022.",
+      cover: "/en/shows/next-year-in-moscow.jpg",
+    },
+    {
+      title: "TechStart",
+      company: "TripleTen",
+      link: "https://tripleten.com/special/podcast/",
+      goal: "Podcast about changing careers into tech, with real stories from coding bootcamp students.",
+      cover: "/en/shows/techstart.jpg",
+    },
+    {
+      title: "Dmitry Sitkovetsky: Keeping the Flame",
+      company: "Independent project",
+      link: "https://pc.st/1854819032",
+      goal: "A family memoir, a portrait of the Russian intelligentsia, and a journey through music and exile.",
+      cover: "/en/shows/keeping-the-flame.jpg",
+    },
+    {
+      title: "Harbin",
+      company: "Memorial",
+      link: "https://pc.st/1677312850/info",
+      goal: "Stories of emigrants who fled the Russian Revolution to the Chinese city of Harbin (podcast in German).",
+      cover: "/en/shows/harbin.jpg",
+    },
   ];
-  const caseCovers = ["/case1.jpg", "/case2.jpg", "/case3.jpg", "/case4.jpg"];
+
+  const testimonials = [
+    {
+      quote:
+        'Working with Libo/Libo on "Keeping the Flame" was one of the most rewarding creative projects I took on last year. What began as a personal audio story for my daughter and grandson became a podcast series that resonated with a much wider audience. The team brought exceptional editorial care, creativity, and intelligence to every stage of the process. Libo/Libo is a first-class operation, and I recommend them wholeheartedly.',
+      author: "Dmitry Sitkovetsky",
+      role: "Violinist, Conductor, Arranger, Educator",
+    },
+    {
+      quote:
+        "The team at Libo/Libo studio go above and beyond wherever they can. Yulia has been a brilliant project manager in keeping everyone on the same page, keeping comms consistent between the teams and everyone on the same page. They do things when they say they do and more importantly are open to feedback and building the working relationship and finding a groove together. It's been a pleasure working with them.",
+      author: "Bella Ghassemi-Smith",
+      role: "Head of the Aurora Tech Award",
+    },
+    {
+      quote:
+        "We were so excited to work with Libo/Libo! We came to them as experts in design and AI - we knew absolutely nothing about podcasts and production. How to work with an audience, how to prepare speakers, how to structure a season - all of this was completely unknown territory for us. The Libo/Libo team took all of that fully on themselves - they walked us through the entire process, gave us guidance at every step, and brought our podcast to a successful release. In the end, the podcast made it to the top charts in the US and Canada. Without Libo/Libo, we definitely wouldn't have made such a great podcast.",
+      author: "Sergey Krasotin",
+      role: "Design Lead and Co-Founder at Humbleteam",
+    },
+  ];
+
+  const heroShows = [
+    {
+      title: "The Idiot",
+      link: "https://www.nytimes.com/column/the-idiot",
+      cover: "/en/shows/the-idiot.jpg",
+    },
+    {
+      title: "Women and the Billion",
+      link: "https://pc.st/en/1855578706",
+      cover: "/en/shows/women-in-the-building.jpg",
+    },
+    {
+      title: "Eight fights",
+      link: "https://www.thisamericanlife.org/807/eight-fights",
+      cover: "/en/shows/eight-fights.jpg",
+    },
+    {
+      title: "Next year in Moscow",
+      link: "https://www.economist.com/audio/podcasts/next-year-in-moscow",
+      cover: "/en/shows/next-year-in-moscow.jpg",
+    },
+  ];
 
   return (
     <div
@@ -349,15 +440,15 @@ export default function Page() {
     >
       <header className="relative z-40 border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Image src="/logo.svg" alt="Либо/Либо" width={160} height={36} priority />
+          <Image src="/logo.svg" alt="Libo/Libo" width={160} height={36} priority />
           <button
             type="button"
             onClick={() => setIsMenuOpen((prev) => !prev)}
-            aria-label={isMenuOpen ? "Закрыть меню" : "Открыть меню"}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
             className="inline-flex h-10 w-10 items-center justify-center border border-white/20 text-white/90 transition hover:border-white/40 hover:text-white"
           >
-            <span className="sr-only">{isMenuOpen ? "Закрыть меню" : "Открыть меню"}</span>
+            <span className="sr-only">{isMenuOpen ? "Close menu" : "Open menu"}</span>
             <span className="relative block h-4 w-5">
               <span
                 className={cn(
@@ -396,11 +487,11 @@ export default function Page() {
           )}
         >
           <div className="flex items-center justify-between">
-            <Image src="/logo.svg" alt="Либо/Либо" width={160} height={36} priority />
+            <Image src="/logo.svg" alt="Libo/Libo" width={160} height={36} priority />
             <button
               type="button"
               onClick={() => setIsMenuOpen(false)}
-              aria-label="Закрыть меню"
+              aria-label="Close menu"
               className="inline-flex h-10 w-10 items-center justify-center text-white/90 transition hover:text-white"
             >
               <span className="text-4xl leading-none">&times;</span>
@@ -425,32 +516,35 @@ export default function Page() {
       <main>
         <div className="mx-auto w-full max-w-6xl px-6 pt-14 pb-10 md:pt-20 md:pb-14">
           <div className="grid gap-10 md:grid-cols-12 md:gap-8">
-            <div className="md:col-span-7">
+            <div className="order-2 md:order-1 md:col-span-6">
               <h1 className="mt-5 text-[clamp(2.5rem,7.2vw,5.25rem)] font-bold leading-[1.01]">
-                Подкасты, которые <HandUnderline>работают</HandUnderline> на ваш{" "}
-                <HandUnderline>бренд</HandUnderline>
+                Podcasts that <HandUnderline>work</HandUnderline> for your{" "}
+                <HandUnderline>brand</HandUnderline>
               </h1>
 
               <p className="mt-6 max-w-xl text-[clamp(1.05rem,1.7vw,1.28rem)] leading-relaxed text-white/80">
-                Реклама в подкастах Либо/Либо и продакшен -{" "}
-                <span className="block">от задумки до публикации</span>
+                Advertising in Libo/Libo studio podcasts and podcast production -{" "}
+                <span className="block">from idea to launch.</span>
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button onClick={() => scrollToId("contacts")}>Разместить рекламу</Button>
-                <Button variant="secondary" onClick={() => scrollToId("production")}>Сделать подкаст</Button>
+                <Button onClick={() => scrollToId("advertising")}>Place an ad</Button>
+                <Button variant="secondary" onClick={() => scrollToId("production")}>Create a podcast</Button>
               </div>
             </div>
 
-            <div className="md:col-span-5">
-              <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-6 md:p-7">
+            <div className="order-1 md:order-2 md:col-span-6">
+              <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-5 md:p-6">
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
-                  <div className="grid grid-cols-2 gap-4">
-                    <CoverPlaceholder label="Обложка #1" src={caseCovers[0]} />
-                    <CoverPlaceholder label="Обложка #2" src={caseCovers[1]} />
-                    <CoverPlaceholder label="Обложка #3" src={caseCovers[2]} />
-                    <CoverPlaceholder label="Обложка #4" src={caseCovers[3]} />
+                  <div className="grid grid-cols-2 gap-5">
+                    {heroShows.map((show) => (
+                      <a key={show.title} href={show.link} target="_blank" rel="noreferrer" className="block">
+                        <div className="transition hover:opacity-90">
+                          <CoverPlaceholder label={show.title} src={show.cover} />
+                        </div>
+                      </a>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -461,61 +555,17 @@ export default function Page() {
         <Divider />
 
         <Section
-          id="advertising"
-          title={<><span>Реклама в </span><HandUnderline>подкастах</HandUnderline><span> студии</span></>}
-          subtitle="Разные форматы для разных задач"
-        >
-          <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
-            {formats.map((f) => (
-              <Card key={f.title}>
-                <div className="flex h-full flex-col">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <div className="text-xl font-bold leading-tight">{f.title}</div>
-                      <div className="mt-2 text-base font-bold text-white/70">{f.duration}</div>
-                    </div>
-                    {f.featured ? (
-                      <span
-                        className="inline-flex items-center rounded-full border border-dashed px-3 py-1 text-xs font-bold tracking-[0.08em]"
-                        style={{ borderColor: COLORS.accent, color: COLORS.accent }}
-                      >
-                        топ-формат
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <p className="mt-4 text-base leading-relaxed text-white/80">{f.desc}</p>
-
-                  <div className="mt-6">
-                    <ul className="mt-3 space-y-2 text-base text-white/80">
-                      {f.benefits.map((x) => (
-                        <li key={x} className="flex gap-3">
-                          <span className="mt-2 h-1.5 w-1.5 shrink-0" style={{ backgroundColor: COLORS.accent }} />
-                          <span>{x}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="mt-auto pt-8">
-                    <Button onClick={() => scrollToId("contacts")}>Запросить медиакит</Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </Section>
-
-        <Section
           id="production"
-          title={<><span>Продакшен вашего </span><HandUnderline>подкаста</HandUnderline></>}
+          title={<><span>Production of your </span><HandUnderline>podcast</HandUnderline></>}
         >
           <div className="mb-10 overflow-hidden border border-white/20 bg-white/[0.04] p-6 md:p-8">
             <div className="h-[2px] w-24" style={{ backgroundColor: COLORS.accent }} />
             <p className="mt-5 max-w-4xl text-[clamp(1.5rem,2.7vw,2.2rem)] font-bold leading-tight text-white">
-              Возьмем на себя все этапы работы: от задумки и концепции до публикации на платформах.
+              We handle every stage: from initial idea and concept to publishing on all platforms.
             </p>
           </div>
+
+          <h3 className="mb-6 text-[clamp(1.6rem,2.8vw,2.3rem)] font-bold">Who it's for</h3>
 
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-2">
             {audiences.map((a) => (
@@ -528,7 +578,7 @@ export default function Page() {
 
           <div className="mt-12">
             <h3 className="text-[clamp(1.8rem,3.2vw,2.8rem)] font-bold">
-              Как устроена <HandUnderline>работа</HandUnderline>
+              How we <HandUnderline>work</HandUnderline>
             </h3>
 
             <div className="mt-8">
@@ -544,7 +594,7 @@ export default function Page() {
                       </div>
                       <div className="w-full">
                         <div className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: COLORS.accent }}>
-                          Шаг {s.n}
+                          Step {s.n}
                         </div>
                         <div className="mt-2 text-[clamp(1.05rem,2vw,1.5rem)] font-bold leading-tight text-white">
                           {s.title}
@@ -566,13 +616,13 @@ export default function Page() {
                     </div>
                     <div className="w-full">
                       <div className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: COLORS.accent }}>
-                        Дополнительно
+                        Optional
                       </div>
                       <div className="mt-2 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight text-white">
-                        Займемся продвижением
+                        Promotion support
                       </div>
                       <p className="mt-2 text-sm leading-relaxed text-white/82 md:mt-3 md:text-base">
-                        Поможем раскрутиться на площадках и собрать больше аудитории.
+                        We help you grow your audience and gain traction across platforms.
                       </p>
                     </div>
                   </div>
@@ -583,35 +633,96 @@ export default function Page() {
         </Section>
 
         <Section
-          id="works"
-          title={<>Наши работы: продакшен</>}
+          id="advertising"
+          title={<><span>Advertising in </span><HandUnderline>Libo/Libo podcasts</HandUnderline></>}
+          subtitle="Bring your brand to a loyal, curious, and globally mobile Russian-speaking audience"
         >
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
-            {works.map((w) => (
+            {formats.map((f) => (
+              <Card key={f.title}>
+                <div className="flex h-full flex-col">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="text-xl font-bold leading-tight">{f.title}</div>
+                      <div className="mt-2 text-base font-bold text-white/70">{f.duration}</div>
+                    </div>
+                    {f.featured ? (
+                      <span
+                        className="inline-flex items-center rounded-full border border-dashed px-3 py-1 text-xs font-bold tracking-[0.08em]"
+                        style={{ borderColor: COLORS.accent, color: COLORS.accent }}
+                      >
+                        top format
+                      </span>
+                    ) : null}
+                  </div>
+
+                  <p className="mt-4 text-base leading-relaxed text-white/80">{f.desc}</p>
+
+                  <div className="mt-6">
+                    <ul className="mt-3 space-y-2 text-base text-white/80">
+                      {f.benefits.map((x) => (
+                        <li key={x} className="flex gap-3">
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0" style={{ backgroundColor: COLORS.accent }} />
+                          <span>{x}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mt-auto pt-8">
+                    <Button onClick={() => scrollToId("contacts")}>Request media kit</Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </Section>
+
+        <Section
+          id="shows"
+          title={<>Our latest shows</>}
+        >
+          <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
+            {shows.map((w) => (
               <Card key={w.title}>
                 <div className="flex h-auto flex-col gap-3 md:h-full md:gap-4">
-                  {w.link ? (
-                    <a href={w.link} target="_blank" rel="noreferrer" className="block">
-                      <CoverPlaceholder label={w.title} src={w.cover} />
-                    </a>
-                  ) : (
+                  <a href={w.link} target="_blank" rel="noreferrer" className="block">
                     <CoverPlaceholder label={w.title} src={w.cover} />
-                  )}
+                  </a>
                   <div>
-                    <div className="text-lg font-bold leading-tight md:text-xl">{w.title} — {w.company}</div>
+                    <div className="text-lg font-bold leading-tight md:text-xl">{w.title}</div>
+                    <div className="mt-1 text-sm text-white/65">Created with {w.company}</div>
                     <p className="mt-2 text-sm leading-relaxed text-white/80 md:mt-3 md:text-base">{w.goal}</p>
                   </div>
                   <div className="pt-0.5 md:mt-auto md:min-h-6 md:pt-1">
-                    {w.link ? (
-                      <a
-                        href={w.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-base font-normal text-white/80 underline-offset-4 transition hover:text-[#FF383C] hover:underline"
-                      >
-                        Послушать <span aria-hidden="true">→</span>
-                      </a>
-                    ) : null}
+                    <a
+                      href={w.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-base font-normal text-white/80 underline-offset-4 transition hover:text-[#FF383C] hover:underline"
+                    >
+                      Open link <span aria-hidden="true">→</span>
+                    </a>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </Section>
+
+        <Section
+          id="reviews"
+          title={<>What our partners say</>}
+        >
+          <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
+            {testimonials.map((x) => (
+              <Card key={x.author}>
+                <div className="flex h-full flex-col">
+                  <p className="text-[1.03rem] leading-relaxed text-white/90">{x.quote}</p>
+                  <div className="mt-7">
+                    <div className="text-base font-semibold text-white">{x.author}</div>
+                    <div className="mt-2 h-px w-[56%] bg-[#FF383C]/80" />
+                    <p className="mt-1 text-sm text-white/70">{x.role}</p>
                   </div>
                 </div>
               </Card>
@@ -623,8 +734,8 @@ export default function Page() {
 
         <Section
           id="contacts"
-          kicker="Контакты"
-          title={<><span>Расскажите про ваш </span><HandUnderline>запрос</HandUnderline></>}
+          kicker="Contact"
+          title={<><span>Tell us about your </span><HandUnderline>request</HandUnderline></>}
         >
           <div className="grid gap-8 md:grid-cols-12">
             <div className="md:col-span-7">
@@ -643,11 +754,11 @@ export default function Page() {
                           "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                          locale: "ru",
+                          locale: "en",
                           page: "/",
                           name,
                           company,
-                          email: contact,
+                          email: knownEmail,
                           message,
                         }),
                       });
@@ -657,14 +768,14 @@ export default function Page() {
                       }
 
                       if (typeof window !== "undefined") {
-                        window.localStorage.setItem("business_contact_value", contact.trim());
+                        window.localStorage.setItem("business_contact_email", knownEmail.trim());
                       }
                       setName("");
                       setCompany("");
                       setMessage("");
                       setIsThankYouOpen(true);
                     } catch {
-                      setSubmitError("Не удалось отправить заявку. Попробуйте позже или напишите нам напрямую.");
+                      setSubmitError("Could not send the request right now. Please try again or email us directly.");
                     } finally {
                       setIsSubmitting(false);
                     }
@@ -672,7 +783,7 @@ export default function Page() {
                 >
                   <div className="grid gap-4 md:grid-cols-2">
                     <div>
-                      <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Имя</label>
+                      <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Name</label>
                       <input
                         name="name"
                         autoComplete="name"
@@ -680,64 +791,58 @@ export default function Page() {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
-                        placeholder="Ваше имя"
+                        placeholder="your name"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Компания</label>
+                      <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Company</label>
                       <input
                         name="organization"
                         autoComplete="organization"
                         value={company}
                         onChange={(e) => setCompany(e.target.value)}
                         className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
-                        placeholder="Название компании"
+                        placeholder="your company"
                       />
                     </div>
                   </div>
 
                   <div>
                     <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">
-                      Контакты (почта / tg)
+                      Contacts
                     </label>
                     <input
                       type="email"
                       name="email"
                       autoComplete="email"
                       required
-                      value={contact}
-                      onChange={(e) => setContact(e.target.value)}
+                      value={knownEmail}
+                      onChange={(e) => setKnownEmail(e.target.value)}
                       className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
-                      placeholder="email или @telegram"
+                      placeholder="email"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Ваш запрос</label>
+                    <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Your message</label>
                     <textarea
                       rows={5}
                       name="message"
+                      autoComplete="off"
                       required
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
-                      placeholder="Реклама / продакшен / сроки / ожидания"
+                      placeholder="type your request here"
                     />
                   </div>
 
                   <div className="pt-2">
-                    <Button>{isSubmitting ? "Отправляем..." : "Отправить запрос"}</Button>
+                    <Button>{isSubmitting ? "Sending..." : "Send request"}</Button>
                   </div>
                   {submitError ? (
                     <p className="text-sm leading-relaxed text-[#FF7D80]">{submitError}</p>
                   ) : null}
-                  <label className="mt-2 flex items-start gap-3 text-sm leading-relaxed text-white/70">
-                    <input
-                      type="checkbox"
-                      className="mt-1 h-4 w-4 rounded-none border border-white/30 bg-transparent accent-[#FF383C]"
-                    />
-                    <span>Соглашаюсь на обработку персональных данных</span>
-                  </label>
                 </form>
               </Card>
             </div>
@@ -747,11 +852,11 @@ export default function Page() {
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
                   <p className="text-[clamp(1.15rem,1.9vw,1.45rem)] leading-relaxed text-white/85">
-                    Или просто напишите нам на{" "}
-                    <a href="mailto:podcast@libolibo.me" className="font-bold text-white hover:opacity-90">
+                    Or just email us at{" "}
+                    <a href="mailto:podcast@libolibo.me" className="font-bold text-white transition hover:text-[#FF383C]">
                       podcast@libolibo.me
                     </a>
-                    . Ответим шустро!
+                    , and we'll get back to you shortly.
                   </p>
                 </div>
               </div>
@@ -762,13 +867,13 @@ export default function Page() {
         <footer className="border-t border-white/10">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-10 md:flex-row md:items-center md:justify-between">
             <div className="text-sm font-light text-white/50">
-              © Студия Либо/Либо
+              © Libo/Libo Studio
             </div>
             <a
               href="/privacy"
               className="text-sm font-light text-white/50 transition hover:text-white/75"
             >
-              Политика конфиденциальности
+              Privacy Policy
             </a>
           </div>
         </footer>
@@ -784,14 +889,14 @@ export default function Page() {
         <div className="relative z-10 w-full max-w-md border border-white/20 bg-[#141414] p-6 text-center">
           <button
             type="button"
-            aria-label="Закрыть попап"
+            aria-label="Close popup"
             className="absolute right-3 top-2 text-xl text-white/70 transition hover:text-white"
             onClick={() => setIsThankYouOpen(false)}
           >
             &times;
           </button>
           <p className="text-lg font-medium leading-relaxed text-white">
-            Спасибо! Скоро свяжемся с вами.
+            Thank you! We&apos;ll get back to you very soon.
           </p>
         </div>
       </div>
