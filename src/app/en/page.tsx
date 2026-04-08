@@ -511,7 +511,7 @@ export default function EnPage() {
       <main>
         <div className="mx-auto w-full max-w-6xl px-6 pt-14 pb-10 md:pt-20 md:pb-14">
           <div className="grid gap-10 md:grid-cols-12 md:gap-8">
-            <div className="md:col-span-7">
+            <div className="md:col-span-6">
               <h1 className="mt-5 text-[clamp(2.5rem,7.2vw,5.25rem)] font-bold leading-[1.01]">
                 Podcasts that <HandUnderline>work</HandUnderline> for your{" "}
                 <HandUnderline>brand</HandUnderline>
@@ -528,11 +528,11 @@ export default function EnPage() {
               </div>
             </div>
 
-            <div className="md:col-span-5">
-              <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-6 md:p-7">
+            <div className="md:col-span-6">
+              <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-5 md:p-6">
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-5">
                     {heroShows.map((show) => (
                       <a key={show.title} href={show.link} target="_blank" rel="noreferrer" className="block">
                         <div className="transition hover:opacity-90">
