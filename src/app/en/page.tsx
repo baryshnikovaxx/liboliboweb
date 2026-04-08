@@ -204,6 +204,8 @@ function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: stri
 
 export default function EnPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [knownEmail, setKnownEmail] = useState("");
+  const [isThankYouOpen, setIsThankYouOpen] = useState(false);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -217,6 +219,20 @@ export default function EnPage() {
       window.removeEventListener("keydown", onEsc);
     };
   }, [isMenuOpen]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const savedEmail = window.localStorage.getItem("business_contact_email");
+    if (savedEmail) {
+      setKnownEmail(savedEmail);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isThankYouOpen) return;
+    const timer = window.setTimeout(() => setIsThankYouOpen(false), 4500);
+    return () => window.clearTimeout(timer);
+  }, [isThankYouOpen]);
 
   const menuItems = [
     { to: "production", label: "Production" },
@@ -384,7 +400,28 @@ export default function EnPage() {
     },
   ];
 
-  const caseCovers = ["/case1.jpg", "/case2.jpg", "/case3.jpg", "/case4.jpg"];
+  const heroShows = [
+    {
+      title: "The Idiot",
+      link: "https://www.nytimes.com/column/the-idiot",
+      cover: "/en/shows/the-idiot.jpg",
+    },
+    {
+      title: "Women and the Billion",
+      link: "https://pc.st/en/1855578706",
+      cover: "/en/shows/women-in-the-building.jpg",
+    },
+    {
+      title: "Eight fights",
+      link: "https://www.thisamericanlife.org/807/eight-fights",
+      cover: "/en/shows/eight-fights.jpg",
+    },
+    {
+      title: "Next year in Moscow",
+      link: "https://www.economist.com/audio/podcasts/next-year-in-moscow",
+      cover: "/en/shows/next-year-in-moscow.jpg",
+    },
+  ];
 
   return (
     <div
@@ -487,19 +524,24 @@ export default function EnPage() {
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button variant="secondary" onClick={() => scrollToId("production")}>Create a podcast</Button>
-                <Button onClick={() => scrollToId("contacts")}>Place an ad</Button>
+                <Button onClick={() => scrollToId("advertising")}>Place an ad</Button>
               </div>
             </div>
 
-            <div className="hidden md:col-span-5 md:block">
+            <div className="md:col-span-5">
               <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-6 md:p-7">
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
-                  <div className="grid grid-cols-2 gap-4">
-                    <CoverPlaceholder label="Show #1" src={caseCovers[0]} />
-                    <CoverPlaceholder label="Show #2" src={caseCovers[1]} />
-                    <CoverPlaceholder label="Show #3" src={caseCovers[2]} />
-                    <CoverPlaceholder label="Show #4" src={caseCovers[3]} />
+                  <div className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-white/65">Our latest shows</div>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    {heroShows.map((show) => (
+                      <a key={show.title} href={show.link} target="_blank" rel="noreferrer" className="group block">
+                        <CoverPlaceholder label={show.title} src={show.cover} />
+                        <span className="mt-2 block text-sm text-white/80 transition group-hover:text-[#FF383C]">
+                          {show.title}
+                        </span>
+                      </a>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -673,6 +715,9 @@ export default function EnPage() {
             {testimonials.map((x) => (
               <Card key={x.author}>
                 <div className="flex h-full flex-col">
+                  <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-xs font-bold uppercase tracking-[0.08em] text-white/80">
+                    {x.author.split(" ").slice(0, 2).map((part) => part[0]).join("")}
+                  </div>
                   <p className="text-[1.03rem] leading-relaxed text-white/85">"{x.quote}"</p>
                   <div className="mt-6 border-t border-white/15 pt-4">
                     <div className="text-base font-bold text-white">{x.author}</div>
@@ -698,13 +743,18 @@ export default function EnPage() {
                   className="space-y-4"
                   onSubmit={(e) => {
                     e.preventDefault();
-                    alert("Form placeholder: we can connect submission next.");
+                    if (typeof window !== "undefined") {
+                      window.localStorage.setItem("business_contact_email", knownEmail.trim());
+                    }
+                    setIsThankYouOpen(true);
                   }}
                 >
                   <div className="grid gap-4 md:grid-cols-2">
                     <div>
                       <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Name</label>
                       <input
+                        name="name"
+                        autoComplete="name"
                         className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
                         placeholder="your name"
                       />
@@ -712,6 +762,8 @@ export default function EnPage() {
                     <div>
                       <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Company</label>
                       <input
+                        name="organization"
+                        autoComplete="organization"
                         className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
                         placeholder="your company"
                       />
@@ -723,6 +775,11 @@ export default function EnPage() {
                       Contacts
                     </label>
                     <input
+                      type="email"
+                      name="email"
+                      autoComplete="email"
+                      value={knownEmail}
+                      onChange={(e) => setKnownEmail(e.target.value)}
                       className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
                       placeholder="email"
                     />
@@ -732,6 +789,8 @@ export default function EnPage() {
                     <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Your message</label>
                     <textarea
                       rows={5}
+                      name="message"
+                      autoComplete="off"
                       className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
                       placeholder="type your request here"
                     />
@@ -750,7 +809,7 @@ export default function EnPage() {
                 <div className="relative z-10">
                   <p className="text-[clamp(1.15rem,1.9vw,1.45rem)] leading-relaxed text-white/85">
                     Or just email us at{" "}
-                    <a href="mailto:podcast@libolibo.me" className="font-bold text-white hover:opacity-90">
+                    <a href="mailto:podcast@libolibo.me" className="font-bold text-white transition hover:text-[#FF383C]">
                       podcast@libolibo.me
                     </a>
                     , and we'll get back to you shortly.
@@ -775,6 +834,28 @@ export default function EnPage() {
           </div>
         </footer>
       </main>
+
+      <div
+        className={cn(
+          "fixed inset-0 z-[70] flex items-center justify-center px-6 transition-opacity duration-300",
+          isThankYouOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+        )}
+      >
+        <div className="absolute inset-0 bg-black/70" onClick={() => setIsThankYouOpen(false)} />
+        <div className="relative z-10 w-full max-w-md border border-white/20 bg-[#141414] p-6 text-center">
+          <button
+            type="button"
+            aria-label="Close popup"
+            className="absolute right-3 top-2 text-xl text-white/70 transition hover:text-white"
+            onClick={() => setIsThankYouOpen(false)}
+          >
+            &times;
+          </button>
+          <p className="text-lg font-medium leading-relaxed text-white">
+            Thank you! We&apos;ll get back to you very soon.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

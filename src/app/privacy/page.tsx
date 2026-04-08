@@ -3,22 +3,22 @@ export default function PrivacyPage() {
     <main className="min-h-screen bg-[#111111] text-white">
       <section className="mx-auto w-full max-w-4xl px-6 py-16 md:py-24">
         <h1 className="text-[clamp(2rem,5vw,3.4rem)] font-bold leading-tight">
-          Политика конфиденциальности
+          Privacy Policy
         </h1>
 
         <div className="mt-8 space-y-6 text-base leading-relaxed text-white/85">
           <p>
-            Мы обрабатываем персональные данные пользователей в соответствии с применимым
-            законодательством и только для целей обратной связи по вашему запросу.
+            We process personal data in accordance with applicable laws and only to reply to
+            your request.
           </p>
           <p>
-            Оставляя заявку на сайте, вы подтверждаете согласие на обработку персональных
-            данных, необходимых для коммуникации и подготовки коммерческого предложения.
+            By submitting a request through this website, you consent to the processing of the
+            personal data required for communication and preparing a commercial proposal.
           </p>
           <p>
-            По вопросам обработки персональных данных вы можете написать на{" "}
-            <a className="font-bold text-white hover:opacity-90" href="mailto:podcast@libolibo.ru">
-              podcast@libolibo.ru
+            For any privacy-related questions, please contact us at{" "}
+            <a className="font-bold text-white transition hover:text-[#FF383C]" href="mailto:podcast@libolibo.me">
+              podcast@libolibo.me
             </a>
             .
           </p>
