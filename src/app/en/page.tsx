@@ -204,6 +204,39 @@ function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: stri
   );
 }
 
+function PodcastMosaic({ covers }: { covers: string[] }) {
+  const [active, setActive] = useState(0);
+  const tiles = Array.from({ length: 9 }, (_, index) => covers[(index + active) % covers.length]);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActive((prev) => (prev + 1) % covers.length);
+    }, 1400);
+
+    return () => window.clearInterval(timer);
+  }, [covers.length]);
+
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      {tiles.map((src, index) => (
+        <div
+          key={`${src}-${index}`}
+          className="group relative aspect-square overflow-hidden border border-white/20 bg-white/5"
+          onMouseEnter={() => setActive((prev) => (prev + index + 1) % covers.length)}
+        >
+          <Image
+            src={src}
+            alt="Libo/Libo podcast cover"
+            fill
+            className="object-cover transition duration-500 group-hover:scale-110"
+            sizes="(min-width: 768px) 180px, 30vw"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function EnPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [name, setName] = useState("");
@@ -407,27 +440,15 @@ export default function EnPage() {
     },
   ];
 
-  const heroShows = [
-    {
-      title: "The Idiot",
-      link: "https://www.nytimes.com/column/the-idiot",
-      cover: "/en/shows/the-idiot.jpg",
-    },
-    {
-      title: "Women and the Billion",
-      link: "https://pc.st/en/1855578706",
-      cover: "/en/shows/women-in-the-building.jpg",
-    },
-    {
-      title: "Eight fights",
-      link: "https://www.thisamericanlife.org/807/eight-fights",
-      cover: "/en/shows/eight-fights.jpg",
-    },
-    {
-      title: "Next year in Moscow",
-      link: "https://www.economist.com/audio/podcasts/next-year-in-moscow",
-      cover: "/en/shows/next-year-in-moscow.jpg",
-    },
+  const mosaicCovers = [
+    "/en/shows/the-idiot.jpg",
+    "/en/shows/women-in-the-building.jpg",
+    "/en/shows/eight-fights.jpg",
+    "/en/shows/ctrl-shift.jpg",
+    "/en/shows/next-year-in-moscow.jpg",
+    "/en/shows/techstart.jpg",
+    "/en/shows/keeping-the-flame.jpg",
+    "/en/shows/harbin.jpg",
   ];
 
   return (
@@ -440,9 +461,9 @@ export default function EnPage() {
           '"Futura PT Web","Futura PT","Futura",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif',
       }}
     >
-      <header className="relative z-40 border-b border-white/10">
+      <header className="fixed left-0 right-0 top-0 z-40 border-b border-white/10 bg-[#111111]/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Image src="/logo.svg" alt="Libo/Libo" width={160} height={36} priority />
+          <Image src="/logo-en.png" alt="Libo/Libo" width={64} height={64} priority />
           <button
             type="button"
             onClick={() => setIsMenuOpen((prev) => !prev)}
@@ -489,7 +510,7 @@ export default function EnPage() {
           )}
         >
           <div className="flex items-center justify-between">
-            <Image src="/logo.svg" alt="Libo/Libo" width={160} height={36} priority />
+            <Image src="/logo-en.png" alt="Libo/Libo" width={64} height={64} priority />
             <button
               type="button"
               onClick={() => setIsMenuOpen(false)}
@@ -515,40 +536,51 @@ export default function EnPage() {
         </div>
       </div>
 
-      <main>
+      <main className="pt-24">
+        <Section
+          id="about"
+          title={<>Libo/Libo podcast studio</>}
+          subtitle="We make podcasts about science, history, sex, technology, psychology, money, culture - basically everything people are curious about - in Russian, English and German. And we help brands speak to that curiosity."
+        >
+          <div className="grid items-start gap-8 md:grid-cols-12">
+            <div className="md:col-span-7">
+              <div className="grid gap-4 sm:grid-cols-3">
+                {[
+                  { value: "300+", label: "episodes a year" },
+                  { value: "31M", label: "downloads in 2025" },
+                  { value: "45+", label: "podcasts" },
+                ].map((stat) => (
+                  <div key={stat.label} className="border border-white/15 bg-white/[0.02] px-4 py-5">
+                    <div className="text-3xl font-bold text-white">{stat.value}</div>
+                    <p className="mt-1 text-sm text-white/70">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="md:col-span-5">
+              <PodcastMosaic covers={mosaicCovers} />
+            </div>
+          </div>
+        </Section>
+
         <div className="mx-auto w-full max-w-6xl px-6 pt-14 pb-10 md:pt-20 md:pb-14">
-          <div className="grid gap-10 md:grid-cols-12 md:gap-8">
-            <div className="order-2 md:order-1 md:col-span-6">
-              <h1 className="mt-5 text-[clamp(2.5rem,7.2vw,5.25rem)] font-bold leading-[1.01]">
+          <div className="rounded-sm bg-white px-6 py-10 text-center text-[#111111] md:px-12 md:py-14">
+            <div className="mx-auto max-w-4xl">
+              <h1 className="text-[clamp(2.2rem,6.6vw,4.75rem)] font-bold leading-[1.01]">
                 Podcasts that <HandUnderline>work</HandUnderline> for your{" "}
                 <HandUnderline>brand</HandUnderline>
               </h1>
 
-              <p className="mt-6 max-w-xl text-[clamp(1.05rem,1.7vw,1.28rem)] leading-relaxed text-white/80">
+              <p className="mx-auto mt-6 max-w-2xl text-[clamp(1.05rem,1.7vw,1.28rem)] leading-relaxed text-black/75">
                 Advertising in Libo/Libo studio podcasts and podcast production -{" "}
                 <span className="block">from idea to launch.</span>
               </p>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button onClick={() => scrollToId("advertising")}>Place an ad</Button>
-                <Button variant="secondary" onClick={() => scrollToId("production")}>Create a podcast</Button>
-              </div>
-            </div>
-
-            <div className="order-1 md:order-2 md:col-span-6">
-              <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-5 md:p-6">
-                <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
-                <div className="relative z-10">
-                  <div className="grid grid-cols-2 gap-5">
-                    {heroShows.map((show) => (
-                      <a key={show.title} href={show.link} target="_blank" rel="noreferrer" className="block">
-                        <div className="transition hover:opacity-90">
-                          <CoverPlaceholder label={show.title} src={show.cover} />
-                        </div>
-                      </a>
-                    ))}
-                  </div>
-                </div>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                <Button onClick={() => scrollToId("production")}>Create a podcast</Button>
+                <Button variant="secondary" onClick={() => scrollToId("advertising")} className="border-black/40 text-black hover:border-black/70 hover:bg-black/5">
+                  Place an ad
+                </Button>
               </div>
             </div>
           </div>
@@ -641,12 +673,12 @@ export default function EnPage() {
         >
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
             {formats.map((f) => (
-              <Card key={f.title}>
+              <Card key={f.title} className="border-black/10 bg-white text-black">
                 <div className="flex h-full flex-col">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <div className="text-xl font-bold leading-tight">{f.title}</div>
-                      <div className="mt-2 text-base font-bold text-white/70">{f.duration}</div>
+                      <div className="mt-2 text-base font-bold text-black/60">{f.duration}</div>
                     </div>
                     {f.featured ? (
                       <span
@@ -658,10 +690,10 @@ export default function EnPage() {
                     ) : null}
                   </div>
 
-                  <p className="mt-4 text-base leading-relaxed text-white/80">{f.desc}</p>
+                  <p className="mt-4 text-base leading-relaxed text-black/75">{f.desc}</p>
 
                   <div className="mt-6">
-                    <ul className="mt-3 space-y-2 text-base text-white/80">
+                    <ul className="mt-3 space-y-2 text-base text-black/75">
                       {f.benefits.map((x) => (
                         <li key={x} className="flex gap-3">
                           <span className="mt-2 h-1.5 w-1.5 shrink-0" style={{ backgroundColor: COLORS.accent }} />
@@ -672,7 +704,9 @@ export default function EnPage() {
                   </div>
 
                   <div className="mt-auto pt-8">
-                    <Button onClick={() => scrollToId("contacts")}>Request media kit</Button>
+                    <Button onClick={() => scrollToId("contacts")} className="bg-[#111111] text-white focus:ring-[#111111]">
+                      Request media kit
+                    </Button>
                   </div>
                 </div>
               </Card>
@@ -693,7 +727,9 @@ export default function EnPage() {
                   </a>
                   <div>
                     <div className="text-lg font-bold leading-tight md:text-xl">{w.title}</div>
-                    <div className="mt-1 text-sm text-white/65">Created with {w.company}</div>
+                    {w.title === "The Idiot, five-part season of Serial podcast" || w.title === "Dmitry Sitkovetsky: Keeping the Flame" ? null : (
+                      <div className="mt-1 text-sm text-white/65">Created with {w.company}</div>
+                    )}
                     <p className="mt-2 text-sm leading-relaxed text-white/80 md:mt-3 md:text-base">{w.goal}</p>
                   </div>
                   <div className="pt-0.5 md:mt-auto md:min-h-6 md:pt-1">
@@ -718,13 +754,13 @@ export default function EnPage() {
         >
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
             {testimonials.map((x) => (
-              <Card key={x.author}>
+              <Card key={x.author} className="border-black/10 bg-white text-black">
                 <div className="flex h-full flex-col">
-                  <p className="text-[1.03rem] leading-relaxed text-white/90">{x.quote}</p>
+                  <p className="text-[1.03rem] leading-relaxed text-black/80">{x.quote}</p>
                   <div className="mt-7">
-                    <div className="text-base font-semibold text-white">{x.author}</div>
+                    <div className="text-base font-semibold text-black">{x.author}</div>
                     <div className="mt-2 h-px w-[56%] bg-[#FF383C]/80" />
-                    <p className="mt-1 text-sm text-white/70">{x.role}</p>
+                    <p className="mt-1 text-sm text-black/70">{x.role}</p>
                   </div>
                 </div>
               </Card>
