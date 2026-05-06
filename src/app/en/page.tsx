@@ -208,7 +208,7 @@ function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: stri
 
 function PodcastMosaic({ covers }: { covers: string[] }) {
   const [active, setActive] = useState(0);
-  const tiles = Array.from({ length: 8 }, (_, index) => covers[(index + active) % covers.length]);
+  const tiles = Array.from({ length: 9 }, (_, index) => covers[(index + active) % covers.length]);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -219,24 +219,46 @@ function PodcastMosaic({ covers }: { covers: string[] }) {
   }, [covers.length]);
 
   return (
-    <div className="grid grid-cols-4 gap-2">
+    <div className="grid grid-cols-3 gap-3">
       {tiles.map((src, index) => (
         <div
           key={`${src}-${index}`}
           className={cn(
-            "group relative overflow-hidden border border-black/10 bg-white",
-            index === 0 ? "col-span-2 row-span-2 aspect-square" : "aspect-square",
+            "group relative aspect-square",
+            index === 0 ? "col-span-2 row-span-2" : "",
           )}
           onMouseEnter={() => setActive((prev) => (prev + index + 1) % covers.length)}
+          style={{ perspective: "1200px" }}
         >
-          <Image
-            src={src}
-            alt="Libo/Libo podcast cover"
-            fill
-            className="object-cover transition duration-700 ease-out group-hover:scale-105"
-            sizes="(min-width: 768px) 320px, 38vw"
-          />
-          <div className="absolute inset-0 bg-white/0 transition duration-500 group-hover:bg-white/10" />
+          <div
+            className="relative h-full w-full transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{
+              transformStyle: "preserve-3d",
+              transform: (active + index) % 5 === 0 || (index === 3 && active % 2 === 0) ? "rotateY(180deg)" : "rotateY(0deg)",
+            }}
+          >
+            <div
+              className="absolute inset-0 overflow-hidden border border-[#E8DDE0] bg-white"
+              style={{ backfaceVisibility: "hidden" }}
+            >
+              <Image
+                src={src}
+                alt="Libo/Libo podcast cover"
+                fill
+                className="object-cover transition duration-700 ease-out group-hover:scale-105"
+                sizes="(min-width: 768px) 460px, 44vw"
+              />
+              <div className="absolute inset-0 bg-white/0 transition duration-500 group-hover:bg-white/10" />
+            </div>
+            <div
+              className="absolute inset-0 flex items-center justify-center border border-[#FF383C] bg-[#FF383C]"
+              style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+            >
+              <span className="px-3 text-center text-xs font-bold uppercase tracking-[0.18em] text-white">
+                Libo/Libo
+              </span>
+            </div>
+          </div>
         </div>
       ))}
     </div>
@@ -545,12 +567,24 @@ export default function EnPage() {
       <main className="pt-24">
         <Section
           id="about"
-          title={<>Libo/Libo podcast studio</>}
-          subtitle="We make podcasts about science, history, sex, technology, psychology, money, culture - basically everything people are curious about - in Russian, English and German. And we help brands speak to that curiosity."
+          title={null}
+          subtitle={null}
         >
-          <div className="grid items-start gap-8 md:grid-cols-12">
-            <div className="md:col-span-7">
-              <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid items-center gap-10 md:grid-cols-12">
+            <div className="md:col-span-6">
+              <h1 className="text-[clamp(2.2rem,6.2vw,4.8rem)] font-bold leading-[1.02] text-black">
+                Podcasts that <HandUnderline>work</HandUnderline> for your <HandUnderline>brand</HandUnderline>
+              </h1>
+              <p className="mt-6 max-w-2xl text-[clamp(1.05rem,1.7vw,1.24rem)] leading-relaxed text-black/75">
+                Advertising in Libo/Libo studio podcasts and podcast production - from idea to launch.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Button onClick={() => scrollToId("production")}>Create a podcast</Button>
+                <Button variant="secondary" onClick={() => scrollToId("advertising")} className="border-[#FF383C]/50 text-[#B12024] hover:border-[#FF383C] hover:bg-[#FFF1F2]">
+                  Place an ad
+                </Button>
+              </div>
+              <div className="mt-8 grid gap-4 sm:grid-cols-3">
                 {[
                   { value: "300+", label: "episodes a year" },
                   { value: "31M", label: "downloads in 2025" },
@@ -563,34 +597,13 @@ export default function EnPage() {
                 ))}
               </div>
             </div>
-            <div className="md:col-span-5">
-              <PodcastMosaic covers={mosaicCovers} />
-            </div>
-          </div>
-        </Section>
-
-        <div className="mx-auto w-full max-w-6xl px-6 pt-14 pb-10 md:pt-20 md:pb-14">
-          <div className="rounded-sm border border-[#E8DDE0] bg-white px-6 py-10 text-center text-[#111111] md:px-12 md:py-14">
-            <div className="mx-auto max-w-4xl">
-              <h1 className="text-[clamp(2.2rem,6.6vw,4.75rem)] font-bold leading-[1.01]">
-                Podcasts that <HandUnderline>work</HandUnderline> for your{" "}
-                <HandUnderline>brand</HandUnderline>
-              </h1>
-
-              <p className="mx-auto mt-6 max-w-2xl text-[clamp(1.05rem,1.7vw,1.28rem)] leading-relaxed text-black/75">
-                Advertising in Libo/Libo studio podcasts and podcast production -{" "}
-                <span className="block">from idea to launch.</span>
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                <Button onClick={() => scrollToId("production")}>Create a podcast</Button>
-                <Button variant="secondary" onClick={() => scrollToId("advertising")} className="border-[#FF383C]/50 text-[#B12024] hover:border-[#FF383C] hover:bg-[#FFF1F2]">
-                  Place an ad
-                </Button>
+            <div className="md:col-span-6">
+              <div className="mx-auto w-full max-w-[560px]">
+                <PodcastMosaic covers={mosaicCovers} />
               </div>
             </div>
           </div>
-        </div>
+        </Section>
 
         <Divider />
 
