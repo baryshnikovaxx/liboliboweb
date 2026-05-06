@@ -113,6 +113,8 @@ function Section({
   subtitle?: React.ReactNode;
   children: React.ReactNode;
 }) {
+  const hasHeading = Boolean(kicker || title || subtitle);
+
   return (
     <section id={id} className="scroll-mt-24">
       <div className="mx-auto w-full max-w-6xl px-6 py-16">
@@ -131,7 +133,7 @@ function Section({
             {subtitle}
           </p>
         ) : null}
-        <div className="mt-10">{children}</div>
+        <div className={hasHeading ? "mt-10" : "mt-0"}>{children}</div>
       </div>
     </section>
   );
@@ -213,7 +215,7 @@ function PodcastMosaic({ covers }: { covers: string[] }) {
   useEffect(() => {
     const timer = window.setInterval(() => {
       setActive((prev) => (prev + 1) % covers.length);
-    }, 1400);
+    }, 4200);
 
     return () => window.clearInterval(timer);
   }, [covers.length]);
@@ -231,7 +233,7 @@ function PodcastMosaic({ covers }: { covers: string[] }) {
           style={{ perspective: "1200px" }}
         >
           <div
-            className="relative h-full w-full transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            className="relative h-full w-full transition-transform duration-[3000ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
             style={{
               transformStyle: "preserve-3d",
               transform: (active + index) % 5 === 0 || (index === 3 && active % 2 === 0) ? "rotateY(180deg)" : "rotateY(0deg)",
@@ -598,7 +600,7 @@ export default function EnPage() {
               </div>
             </div>
             <div className="md:col-span-6">
-              <div className="mx-auto w-full max-w-[560px]">
+              <div className="mx-auto w-full max-w-[500px]">
                 <PodcastMosaic covers={mosaicCovers} />
               </div>
             </div>
