@@ -4,9 +4,11 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const COLORS = {
-  bg: "#111111",
-  fg: "#FFFFFF",
+  bg: "#FFFFFF",
+  fg: "#111111",
   accent: "#FF383C",
+  soft: "#FFF6F7",
+  border: "#E8DDE0",
 };
 
 const HEADER_OFFSET = 88;
@@ -60,11 +62,11 @@ function Button({
   className?: string;
 }) {
   const base =
-    "inline-flex items-center justify-center px-5 py-3 text-sm font-bold tracking-wide uppercase transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#111111] rounded-none";
+    "inline-flex items-center justify-center px-5 py-3 text-sm font-bold tracking-wide uppercase transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white rounded-none";
   const styles =
     variant === "primary"
       ? "bg-[#FF383C] text-white hover:opacity-90 focus:ring-[#FF383C]"
-      : "border border-white/30 text-white hover:border-white/60 hover:bg-white/5 focus:ring-white/60";
+      : "border border-[#FF383C]/45 text-[#B12024] hover:border-[#FF383C] hover:bg-[#FFF1F2] focus:ring-[#FF383C]/45";
 
   return (
     <button className={cn(base, styles, className)} onClick={onClick} type={type}>
@@ -91,7 +93,7 @@ function NavLinkButton({
         scrollToId(to);
         onNavigate?.();
       }}
-      className={cn("text-xs font-bold uppercase tracking-[0.22em] text-white/75 hover:text-white", className)}
+      className={cn("text-xs font-bold uppercase tracking-[0.22em] text-black/70 hover:text-black", className)}
     >
       {children}
     </button>
@@ -115,17 +117,17 @@ function Section({
     <section id={id} className="scroll-mt-24">
       <div className="mx-auto w-full max-w-6xl px-6 py-16">
         {kicker ? (
-          <div className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-white/70">
+          <div className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-black/60">
             {kicker}
           </div>
         ) : null}
         {title ? (
-          <h2 className="text-[clamp(2rem,5vw,4.25rem)] font-bold leading-[1.03] text-white">
+          <h2 className="text-[clamp(2rem,5vw,4.25rem)] font-bold leading-[1.03] text-black">
             {title}
           </h2>
         ) : null}
         {subtitle ? (
-          <p className="mt-4 max-w-4xl text-[clamp(1.05rem,1.7vw,1.25rem)] leading-relaxed text-white/80">
+          <p className="mt-4 max-w-4xl text-[clamp(1.05rem,1.7vw,1.25rem)] leading-relaxed text-black/70">
             {subtitle}
           </p>
         ) : null}
@@ -137,7 +139,7 @@ function Section({
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("relative h-auto overflow-hidden border border-white/15 bg-white/[0.02] p-5 md:h-full md:p-7", className)}>
+    <div className={cn("relative h-auto overflow-hidden border border-[#E8DDE0] bg-white p-5 md:h-full md:p-7", className)}>
       <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
       <div className="relative z-10 h-full">{children}</div>
     </div>
@@ -145,7 +147,7 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 }
 
 function Divider() {
-  return <div className="h-px w-full bg-white/10" />;
+  return <div className="h-px w-full bg-[#E8DDE0]" />;
 }
 
 function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: string }) {
@@ -180,23 +182,23 @@ function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: stri
           <path
             d="M12 18 L 88 18"
             fill="none"
-            stroke="white"
-            strokeOpacity="0.35"
+            stroke="black"
+            strokeOpacity="0.25"
             strokeWidth="1.2"
             strokeLinecap="round"
           />
           <path
             d="M12 82 L 76 82"
             fill="none"
-            stroke="white"
-            strokeOpacity="0.25"
+            stroke="black"
+            strokeOpacity="0.15"
             strokeWidth="1.2"
             strokeLinecap="round"
           />
         </svg>
       </div>
       <div className="absolute inset-0 flex items-center justify-center px-3 text-center">
-        <span className="text-xs font-bold uppercase tracking-[0.16em] text-white/60">
+        <span className="text-xs font-bold uppercase tracking-[0.16em] text-black/60">
           {label}
         </span>
       </div>
@@ -206,7 +208,7 @@ function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: stri
 
 function PodcastMosaic({ covers }: { covers: string[] }) {
   const [active, setActive] = useState(0);
-  const tiles = Array.from({ length: 9 }, (_, index) => covers[(index + active) % covers.length]);
+  const tiles = Array.from({ length: 8 }, (_, index) => covers[(index + active) % covers.length]);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -217,20 +219,24 @@ function PodcastMosaic({ covers }: { covers: string[] }) {
   }, [covers.length]);
 
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-4 gap-2">
       {tiles.map((src, index) => (
         <div
           key={`${src}-${index}`}
-          className="group relative aspect-square overflow-hidden border border-white/20 bg-white/5"
+          className={cn(
+            "group relative overflow-hidden border border-black/10 bg-white",
+            index === 0 ? "col-span-2 row-span-2 aspect-square" : "aspect-square",
+          )}
           onMouseEnter={() => setActive((prev) => (prev + index + 1) % covers.length)}
         >
           <Image
             src={src}
             alt="Libo/Libo podcast cover"
             fill
-            className="object-cover transition duration-500 group-hover:scale-110"
-            sizes="(min-width: 768px) 180px, 30vw"
+            className="object-cover transition duration-700 ease-out group-hover:scale-105"
+            sizes="(min-width: 768px) 320px, 38vw"
           />
+          <div className="absolute inset-0 bg-white/0 transition duration-500 group-hover:bg-white/10" />
         </div>
       ))}
     </div>
@@ -461,7 +467,7 @@ export default function EnPage() {
           '"Futura PT Web","Futura PT","Futura",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif',
       }}
     >
-      <header className="fixed left-0 right-0 top-0 z-40 border-b border-white/10 bg-[#111111]/90 backdrop-blur">
+      <header className="fixed left-0 right-0 top-0 z-40 border-b border-[#E8DDE0] bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Image src="/logo-en.png" alt="Libo/Libo" width={64} height={64} priority />
           <button
@@ -469,7 +475,7 @@ export default function EnPage() {
             onClick={() => setIsMenuOpen((prev) => !prev)}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
-            className="inline-flex h-10 w-10 items-center justify-center border border-white/20 text-white/90 transition hover:border-white/40 hover:text-white"
+            className="inline-flex h-10 w-10 items-center justify-center border border-black/20 text-black/85 transition hover:border-black/50 hover:text-black"
           >
             <span className="sr-only">{isMenuOpen ? "Close menu" : "Open menu"}</span>
             <span className="relative block h-4 w-5">
@@ -502,7 +508,7 @@ export default function EnPage() {
           isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
         )}
       >
-        <div className="absolute inset-0 bg-[#0a0b0f]" />
+        <div className="absolute inset-0 bg-white" />
         <div
           className={cn(
             "mx-auto flex h-full w-full max-w-6xl flex-col px-6 py-5 transition-all duration-300",
@@ -515,7 +521,7 @@ export default function EnPage() {
               type="button"
               onClick={() => setIsMenuOpen(false)}
               aria-label="Close menu"
-              className="inline-flex h-10 w-10 items-center justify-center text-white/90 transition hover:text-white"
+              className="inline-flex h-10 w-10 items-center justify-center text-black/80 transition hover:text-black"
             >
               <span className="text-4xl leading-none">&times;</span>
             </button>
@@ -527,7 +533,7 @@ export default function EnPage() {
                 key={item.to}
                 to={item.to}
                 onNavigate={() => setIsMenuOpen(false)}
-                className="text-[clamp(2rem,7vw,5rem)] font-medium normal-case tracking-normal text-white/95"
+                className="text-[clamp(2rem,7vw,5rem)] font-medium normal-case tracking-normal text-black"
               >
                 {item.label}
               </NavLinkButton>
@@ -550,9 +556,9 @@ export default function EnPage() {
                   { value: "31M", label: "downloads in 2025" },
                   { value: "45+", label: "podcasts" },
                 ].map((stat) => (
-                  <div key={stat.label} className="border border-white/15 bg-white/[0.02] px-4 py-5">
-                    <div className="text-3xl font-bold text-white">{stat.value}</div>
-                    <p className="mt-1 text-sm text-white/70">{stat.label}</p>
+                  <div key={stat.label} className="border border-[#E8DDE0] bg-[#FFF8F8] px-4 py-5">
+                    <div className="text-3xl font-bold text-black">{stat.value}</div>
+                    <p className="mt-1 text-sm text-black/65">{stat.label}</p>
                   </div>
                 ))}
               </div>
@@ -564,7 +570,7 @@ export default function EnPage() {
         </Section>
 
         <div className="mx-auto w-full max-w-6xl px-6 pt-14 pb-10 md:pt-20 md:pb-14">
-          <div className="rounded-sm bg-white px-6 py-10 text-center text-[#111111] md:px-12 md:py-14">
+          <div className="rounded-sm border border-[#E8DDE0] bg-white px-6 py-10 text-center text-[#111111] md:px-12 md:py-14">
             <div className="mx-auto max-w-4xl">
               <h1 className="text-[clamp(2.2rem,6.6vw,4.75rem)] font-bold leading-[1.01]">
                 Podcasts that <HandUnderline>work</HandUnderline> for your{" "}
@@ -578,7 +584,7 @@ export default function EnPage() {
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
                 <Button onClick={() => scrollToId("production")}>Create a podcast</Button>
-                <Button variant="secondary" onClick={() => scrollToId("advertising")} className="border-black/40 text-black hover:border-black/70 hover:bg-black/5">
+                <Button variant="secondary" onClick={() => scrollToId("advertising")} className="border-[#FF383C]/50 text-[#B12024] hover:border-[#FF383C] hover:bg-[#FFF1F2]">
                   Place an ad
                 </Button>
               </div>
@@ -592,9 +598,9 @@ export default function EnPage() {
           id="production"
           title={<><span>Production of your </span><HandUnderline>podcast</HandUnderline></>}
         >
-          <div className="mb-10 overflow-hidden border border-white/20 bg-white/[0.04] p-6 md:p-8">
+          <div className="mb-10 overflow-hidden border border-[#E8DDE0] bg-[#FFF9FA] p-6 md:p-8">
             <div className="h-[2px] w-24" style={{ backgroundColor: COLORS.accent }} />
-            <p className="mt-5 max-w-4xl text-[clamp(1.5rem,2.7vw,2.2rem)] font-bold leading-tight text-white">
+            <p className="mt-5 max-w-4xl text-[clamp(1.5rem,2.7vw,2.2rem)] font-bold leading-tight text-black">
               We handle every stage: from initial idea and concept to publishing on all platforms.
             </p>
           </div>
@@ -605,7 +611,7 @@ export default function EnPage() {
             {audiences.map((a) => (
               <Card key={a.title}>
                 <div className="text-lg font-bold leading-tight">{a.title}</div>
-                <p className="mt-3 text-base leading-relaxed text-white/80">{a.text}</p>
+                <p className="mt-3 text-base leading-relaxed text-black/70">{a.text}</p>
               </Card>
             ))}
           </div>
@@ -618,7 +624,7 @@ export default function EnPage() {
             <div className="mt-8">
               <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-2">
                 {steps.map((s) => (
-                  <Card key={s.n} className="bg-white/[0.035]">
+                  <Card key={s.n} className="bg-[#FFF9FA]">
                     <div className="flex items-start gap-4">
                       <div
                         className="inline-flex h-12 w-12 shrink-0 items-center justify-center border text-xl font-bold"
@@ -630,17 +636,17 @@ export default function EnPage() {
                         <div className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: COLORS.accent }}>
                           Step {s.n}
                         </div>
-                        <div className="mt-2 text-[clamp(1.05rem,2vw,1.5rem)] font-bold leading-tight text-white">
+                        <div className="mt-2 text-[clamp(1.05rem,2vw,1.5rem)] font-bold leading-tight text-black">
                           {s.title}
                         </div>
                         {s.text ? (
-                          <p className="mt-2 text-sm leading-relaxed text-white/82 md:mt-3 md:text-base">{s.text}</p>
+                          <p className="mt-2 text-sm leading-relaxed text-black/70 md:mt-3 md:text-base">{s.text}</p>
                         ) : null}
                       </div>
                     </div>
                   </Card>
                 ))}
-                <Card className="bg-white/[0.035] md:col-span-2">
+                <Card className="bg-[#FFF9FA] md:col-span-2">
                   <div className="flex items-start gap-4">
                     <div
                       className="inline-flex h-12 w-12 shrink-0 items-center justify-center border text-lg font-bold"
@@ -652,10 +658,10 @@ export default function EnPage() {
                       <div className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: COLORS.accent }}>
                         Optional
                       </div>
-                      <div className="mt-2 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight text-white">
+                      <div className="mt-2 text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-tight text-black">
                         Promotion support
                       </div>
-                      <p className="mt-2 text-sm leading-relaxed text-white/82 md:mt-3 md:text-base">
+                      <p className="mt-2 text-sm leading-relaxed text-black/70 md:mt-3 md:text-base">
                         We help you grow your audience and gain traction across platforms.
                       </p>
                     </div>
@@ -673,7 +679,7 @@ export default function EnPage() {
         >
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
             {formats.map((f) => (
-              <Card key={f.title} className="border-black/10 bg-white text-black">
+              <Card key={f.title} className="border-[#E8DDE0] bg-white text-black">
                 <div className="flex h-full flex-col">
                   <div className="flex items-start justify-between gap-4">
                     <div>
@@ -704,7 +710,7 @@ export default function EnPage() {
                   </div>
 
                   <div className="mt-auto pt-8">
-                    <Button onClick={() => scrollToId("contacts")} className="bg-[#111111] text-white focus:ring-[#111111]">
+                    <Button onClick={() => scrollToId("contacts")} className="bg-[#111111] text-white hover:bg-[#262626] focus:ring-[#111111]">
                       Request media kit
                     </Button>
                   </div>
@@ -728,16 +734,16 @@ export default function EnPage() {
                   <div>
                     <div className="text-lg font-bold leading-tight md:text-xl">{w.title}</div>
                     {w.title === "The Idiot, five-part season of Serial podcast" || w.title === "Dmitry Sitkovetsky: Keeping the Flame" ? null : (
-                      <div className="mt-1 text-sm text-white/65">Created with {w.company}</div>
+                      <div className="mt-1 text-sm text-black/55">Created with {w.company}</div>
                     )}
-                    <p className="mt-2 text-sm leading-relaxed text-white/80 md:mt-3 md:text-base">{w.goal}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-black/70 md:mt-3 md:text-base">{w.goal}</p>
                   </div>
                   <div className="pt-0.5 md:mt-auto md:min-h-6 md:pt-1">
                     <a
                       href={w.link}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-base font-normal text-white/80 underline-offset-4 transition hover:text-[#FF383C] hover:underline"
+                      className="inline-flex items-center gap-1 text-base font-normal text-black/75 underline-offset-4 transition hover:text-[#FF383C] hover:underline"
                     >
                       Open link <span aria-hidden="true">→</span>
                     </a>
@@ -754,7 +760,7 @@ export default function EnPage() {
         >
           <div className="grid gap-5 md:auto-rows-fr md:items-stretch md:gap-6 md:grid-cols-3">
             {testimonials.map((x) => (
-              <Card key={x.author} className="border-black/10 bg-white text-black">
+              <Card key={x.author} className="border-[#E8DDE0] bg-white text-black">
                 <div className="flex h-full flex-col">
                   <p className="text-[1.03rem] leading-relaxed text-black/80">{x.quote}</p>
                   <div className="mt-7">
@@ -821,32 +827,32 @@ export default function EnPage() {
                 >
                   <div className="grid gap-4 md:grid-cols-2">
                     <div>
-                      <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Name</label>
+                      <label className="text-xs font-bold uppercase tracking-[0.22em] text-black/55">Name</label>
                       <input
                         name="name"
                         autoComplete="name"
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
+                        className="mt-2 w-full border border-black/15 bg-white px-4 py-3 text-black placeholder:text-black/30 focus:border-black/40 focus:outline-none"
                         placeholder="your name"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Company</label>
+                      <label className="text-xs font-bold uppercase tracking-[0.22em] text-black/55">Company</label>
                       <input
                         name="organization"
                         autoComplete="organization"
                         value={company}
                         onChange={(e) => setCompany(e.target.value)}
-                        className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
+                        className="mt-2 w-full border border-black/15 bg-white px-4 py-3 text-black placeholder:text-black/30 focus:border-black/40 focus:outline-none"
                         placeholder="your company"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">
+                    <label className="text-xs font-bold uppercase tracking-[0.22em] text-black/55">
                       Contacts
                     </label>
                     <input
@@ -856,13 +862,13 @@ export default function EnPage() {
                       required
                       value={knownEmail}
                       onChange={(e) => setKnownEmail(e.target.value)}
-                      className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
+                      className="mt-2 w-full border border-black/15 bg-white px-4 py-3 text-black placeholder:text-black/30 focus:border-black/40 focus:outline-none"
                       placeholder="email"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Your message</label>
+                    <label className="text-xs font-bold uppercase tracking-[0.22em] text-black/55">Your message</label>
                     <textarea
                       rows={5}
                       name="message"
@@ -870,7 +876,7 @@ export default function EnPage() {
                       required
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      className="mt-2 w-full border border-white/15 bg-transparent px-4 py-3 text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none"
+                      className="mt-2 w-full border border-black/15 bg-white px-4 py-3 text-black placeholder:text-black/30 focus:border-black/40 focus:outline-none"
                       placeholder="type your request here"
                     />
                   </div>
@@ -886,12 +892,12 @@ export default function EnPage() {
             </div>
 
             <div className="md:col-span-5">
-              <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-7">
+              <div className="relative overflow-hidden border border-[#E8DDE0] bg-white p-7">
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
-                  <p className="text-[clamp(1.15rem,1.9vw,1.45rem)] leading-relaxed text-white/85">
+                  <p className="text-[clamp(1.15rem,1.9vw,1.45rem)] leading-relaxed text-black/80">
                     Or just email us at{" "}
-                    <a href="mailto:podcast@libolibo.me" className="font-bold text-white transition hover:text-[#FF383C]">
+                    <a href="mailto:podcast@libolibo.me" className="font-bold text-black transition hover:text-[#FF383C]">
                       podcast@libolibo.me
                     </a>
                     , and we'll get back to you shortly.
@@ -902,14 +908,14 @@ export default function EnPage() {
           </div>
         </Section>
 
-        <footer className="border-t border-white/10">
+        <footer className="border-t border-[#E8DDE0]">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-10 md:flex-row md:items-center md:justify-between">
-            <div className="text-sm font-light text-white/50">
+            <div className="text-sm font-light text-black/50">
               © Libo/Libo Studio
             </div>
             <a
               href="/privacy"
-              className="text-sm font-light text-white/50 transition hover:text-white/75"
+              className="text-sm font-light text-black/50 transition hover:text-black/75"
             >
               Privacy Policy
             </a>
@@ -923,17 +929,17 @@ export default function EnPage() {
           isThankYouOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
         )}
       >
-        <div className="absolute inset-0 bg-black/70" onClick={() => setIsThankYouOpen(false)} />
-        <div className="relative z-10 w-full max-w-md border border-white/20 bg-[#141414] p-6 text-center">
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]" onClick={() => setIsThankYouOpen(false)} />
+        <div className="relative z-10 w-full max-w-md border border-black/10 bg-white p-6 text-center shadow-xl">
           <button
             type="button"
             aria-label="Close popup"
-            className="absolute right-3 top-2 text-xl text-white/70 transition hover:text-white"
+            className="absolute right-3 top-2 text-xl text-black/45 transition hover:text-black/80"
             onClick={() => setIsThankYouOpen(false)}
           >
             &times;
           </button>
-          <p className="text-lg font-medium leading-relaxed text-white">
+          <p className="text-lg font-medium leading-relaxed text-black/90">
             Thank you! We&apos;ll get back to you very soon.
           </p>
         </div>
