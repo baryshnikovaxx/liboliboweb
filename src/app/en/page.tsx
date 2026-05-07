@@ -210,8 +210,18 @@ function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: stri
 
 function PodcastMosaic({ covers }: { covers: string[] }) {
   const [isHovered, setIsHovered] = useState(false);
-  const [tileOrder, setTileOrder] = useState<number[]>(() => Array.from({ length: 9 }, (_, index) => index));
-  const tiles = Array.from({ length: 9 }, (_, index) => covers[index % covers.length]);
+  const [tileOrder, setTileOrder] = useState<number[]>(() => Array.from({ length: 6 }, (_, index) => index));
+  const tiles = Array.from({ length: 6 }, (_, index) => covers[index % covers.length]);
+  const smallTileIndexes = [1, 2, 3, 4, 5];
+
+  const slotByIndex: Array<{ col: number; row: number; colSpan?: number; rowSpan?: number }> = [
+    { col: 0, row: 0, colSpan: 2, rowSpan: 2 }, // big tile
+    { col: 2, row: 0 },
+    { col: 2, row: 1 },
+    { col: 0, row: 2 },
+    { col: 1, row: 2 },
+    { col: 2, row: 2 },
+  ];
 
   useEffect(() => {
     if (!isHovered) return;
@@ -219,10 +229,10 @@ function PodcastMosaic({ covers }: { covers: string[] }) {
     const timer = window.setInterval(() => {
       setTileOrder((prev) => {
         const next = [...prev];
-        const first = Math.floor(Math.random() * next.length);
-        let second = Math.floor(Math.random() * next.length);
+        const first = smallTileIndexes[Math.floor(Math.random() * smallTileIndexes.length)];
+        let second = smallTileIndexes[Math.floor(Math.random() * smallTileIndexes.length)];
         while (second === first) {
-          second = Math.floor(Math.random() * next.length);
+          second = smallTileIndexes[Math.floor(Math.random() * smallTileIndexes.length)];
         }
 
         [next[first], next[second]] = [next[second], next[first]];
@@ -241,16 +251,19 @@ function PodcastMosaic({ covers }: { covers: string[] }) {
     >
       {tiles.map((src, tileIndex) => {
         const slot = tileOrder[tileIndex];
-        const row = Math.floor(slot / 3);
-        const col = slot % 3;
+        const slotDef = slotByIndex[slot];
+        const colSpan = slotDef.colSpan ?? 1;
+        const rowSpan = slotDef.rowSpan ?? 1;
+        const col = slotDef.col;
+        const row = slotDef.row;
 
         return (
           <div
             key={`tile-${tileIndex}`}
             className="absolute overflow-hidden border border-[#E8DDE0] bg-white transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
             style={{
-              width: "calc((100% - 1.5rem) / 3)",
-              height: "calc((100% - 1.5rem) / 3)",
+              width: `calc(${colSpan} * ((100% - 1.5rem) / 3) + ${(colSpan - 1) * 0.75}rem)`,
+              height: `calc(${rowSpan} * ((100% - 1.5rem) / 3) + ${(rowSpan - 1) * 0.75}rem)`,
               left: `calc(${col} * ((100% - 1.5rem) / 3 + 0.75rem))`,
               top: `calc(${row} * ((100% - 1.5rem) / 3 + 0.75rem))`,
             }}
