@@ -210,6 +210,7 @@ function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: stri
 
 function PodcastMosaic({ covers }: { covers: string[] }) {
   const [active, setActive] = useState(0);
+  const [hoveredTile, setHoveredTile] = useState<number | null>(null);
   const tiles = Array.from({ length: 9 }, (_, index) => covers[(index + active) % covers.length]);
 
   useEffect(() => {
@@ -224,19 +225,26 @@ function PodcastMosaic({ covers }: { covers: string[] }) {
     <div className="grid grid-cols-3 gap-3">
       {tiles.map((src, index) => (
         <div
-          key={`${src}-${index}`}
+          key={`tile-${index}`}
           className={cn(
-            "group relative aspect-square",
+            "group relative aspect-square transition-transform duration-500 ease-out",
+            hoveredTile === index ? "-translate-y-1.5" : "translate-y-0",
             index === 0 ? "col-span-2 row-span-2" : "",
           )}
-          onMouseEnter={() => setActive((prev) => (prev + index + 1) % covers.length)}
+          onMouseEnter={() => setHoveredTile(index)}
+          onMouseLeave={() => setHoveredTile(null)}
           style={{ perspective: "1200px" }}
         >
           <div
-            className="relative h-full w-full transition-transform duration-[3000ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+            className="relative h-full w-full transition-transform duration-[2200ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
             style={{
               transformStyle: "preserve-3d",
-              transform: (active + index) % 5 === 0 || (index === 3 && active % 2 === 0) ? "rotateY(180deg)" : "rotateY(0deg)",
+              transform:
+                hoveredTile === index
+                  ? "rotateY(8deg) rotateX(2deg) scale(1.02)"
+                  : (active + index) % 5 === 0 || (index === 3 && active % 2 === 0)
+                    ? "rotateY(180deg)"
+                    : "rotateY(0deg)",
             }}
           >
             <div
@@ -251,6 +259,8 @@ function PodcastMosaic({ covers }: { covers: string[] }) {
                 sizes="(min-width: 768px) 460px, 44vw"
               />
               <div className="absolute inset-0 bg-white/0 transition duration-500 group-hover:bg-white/10" />
+              <div className="pointer-events-none absolute -inset-y-1/3 -left-1/2 w-1/3 rotate-12 bg-white/35 opacity-0 blur-xl transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100" />
+              <div className="pointer-events-none absolute inset-0 shadow-[0_0_0_0_rgba(255,56,60,0)] transition-shadow duration-500 group-hover:shadow-[0_14px_35px_-16px_rgba(255,56,60,0.55)]" />
             </div>
             <div
               className="absolute inset-0 flex items-center justify-center border border-[#FF383C] bg-[#FF383C]"
@@ -611,8 +621,10 @@ export default function EnPage() {
           subtitle="Advertising in Libo/Libo studio podcasts and podcast production - from idea to launch."
         >
           <div className="mb-8 flex flex-col gap-3 sm:flex-row">
-            <Button onClick={() => scrollToId("production")}>CREATE A PODCAST</Button>
-            <Button variant="secondary" onClick={() => scrollToId("advertising")} className="border-[#FF383C]/50 text-[#B12024] hover:border-[#FF383C] hover:bg-[#FFF1F2]">
+            <Button onClick={() => scrollToId("production")} className="px-8 py-4 text-base tracking-[0.11em]">
+              CREATE A PODCAST
+            </Button>
+            <Button variant="secondary" onClick={() => scrollToId("advertising")} className="px-8 py-4 text-base tracking-[0.11em] border-[#FF383C]/50 text-[#B12024] hover:border-[#FF383C] hover:bg-[#FFF1F2]">
               PLACE AN AD
             </Button>
           </div>
