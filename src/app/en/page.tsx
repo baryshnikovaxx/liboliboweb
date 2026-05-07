@@ -209,70 +209,62 @@ function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: stri
 }
 
 function PodcastMosaic({ covers }: { covers: string[] }) {
-  const [active, setActive] = useState(0);
-  const [hoveredTile, setHoveredTile] = useState<number | null>(null);
-  const tiles = Array.from({ length: 9 }, (_, index) => covers[(index + active) % covers.length]);
+  const [isHovered, setIsHovered] = useState(false);
+  const [tileOrder, setTileOrder] = useState<number[]>(() => Array.from({ length: 9 }, (_, index) => index));
+  const tiles = Array.from({ length: 9 }, (_, index) => covers[index % covers.length]);
 
   useEffect(() => {
+    if (!isHovered) return;
+
     const timer = window.setInterval(() => {
-      setActive((prev) => (prev + 1) % covers.length);
-    }, 4200);
+      setTileOrder((prev) => {
+        const next = [...prev];
+        const first = Math.floor(Math.random() * next.length);
+        let second = Math.floor(Math.random() * next.length);
+        while (second === first) {
+          second = Math.floor(Math.random() * next.length);
+        }
+
+        [next[first], next[second]] = [next[second], next[first]];
+        return next;
+      });
+    }, 1400);
 
     return () => window.clearInterval(timer);
-  }, [covers.length]);
+  }, [isHovered]);
 
   return (
-    <div className="grid grid-cols-3 gap-3">
-      {tiles.map((src, index) => (
-        <div
-          key={`tile-${index}`}
-          className={cn(
-            "group relative aspect-square transition-transform duration-500 ease-out",
-            hoveredTile === index ? "-translate-y-1.5" : "translate-y-0",
-            index === 0 ? "col-span-2 row-span-2" : "",
-          )}
-          onMouseEnter={() => setHoveredTile(index)}
-          onMouseLeave={() => setHoveredTile(null)}
-          style={{ perspective: "1200px" }}
-        >
+    <div
+      className="relative aspect-square w-full"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {tiles.map((src, tileIndex) => {
+        const slot = tileOrder[tileIndex];
+        const row = Math.floor(slot / 3);
+        const col = slot % 3;
+
+        return (
           <div
-            className="relative h-full w-full transition-transform duration-[2200ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
+            key={`tile-${tileIndex}`}
+            className="absolute overflow-hidden border border-[#E8DDE0] bg-white transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
             style={{
-              transformStyle: "preserve-3d",
-              transform:
-                hoveredTile === index
-                  ? "rotateY(8deg) rotateX(2deg) scale(1.02)"
-                  : (active + index) % 5 === 0 || (index === 3 && active % 2 === 0)
-                    ? "rotateY(180deg)"
-                    : "rotateY(0deg)",
+              width: "calc((100% - 1.5rem) / 3)",
+              height: "calc((100% - 1.5rem) / 3)",
+              left: `calc(${col} * ((100% - 1.5rem) / 3 + 0.75rem))`,
+              top: `calc(${row} * ((100% - 1.5rem) / 3 + 0.75rem))`,
             }}
           >
-            <div
-              className="absolute inset-0 overflow-hidden border border-[#E8DDE0] bg-white"
-              style={{ backfaceVisibility: "hidden" }}
-            >
-              <Image
-                src={src}
-                alt="Libo/Libo podcast cover"
-                fill
-                className="object-cover transition duration-700 ease-out group-hover:scale-105"
-                sizes="(min-width: 768px) 460px, 44vw"
-              />
-              <div className="absolute inset-0 bg-white/0 transition duration-500 group-hover:bg-white/10" />
-              <div className="pointer-events-none absolute -inset-y-1/3 -left-1/2 w-1/3 rotate-12 bg-white/35 opacity-0 blur-xl transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100" />
-              <div className="pointer-events-none absolute inset-0 shadow-[0_0_0_0_rgba(255,56,60,0)] transition-shadow duration-500 group-hover:shadow-[0_14px_35px_-16px_rgba(255,56,60,0.55)]" />
-            </div>
-            <div
-              className="absolute inset-0 flex items-center justify-center border border-[#FF383C] bg-[#FF383C]"
-              style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-            >
-              <span className="px-3 text-center text-xs font-bold uppercase tracking-[0.18em] text-white">
-                Libo/Libo
-              </span>
-            </div>
+            <Image
+              src={src}
+              alt="Libo/Libo podcast cover"
+              fill
+              className="object-cover"
+              sizes="(min-width: 768px) 460px, 44vw"
+            />
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
