@@ -575,17 +575,13 @@ export default function EnPage() {
           <div className="grid items-center gap-10 md:grid-cols-12">
             <div className="md:col-span-6">
               <h1 className="text-[clamp(2.2rem,6.2vw,4.8rem)] font-bold leading-[1.02] text-black">
-                Podcasts that <HandUnderline>work</HandUnderline> for your <HandUnderline>brand</HandUnderline>
+                Libo/Libo podcast studio
               </h1>
               <p className="mt-6 max-w-2xl text-[clamp(1.05rem,1.7vw,1.24rem)] leading-relaxed text-black/75">
-                Advertising in Libo/Libo studio podcasts and podcast production - from idea to launch.
+                We make podcasts about science, history, sex, technology, psychology, money, culture - basically
+                everything people are curious about - in Russian, English and German. And we help brands speak to that
+                curiosity.
               </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button onClick={() => scrollToId("production")}>Create a podcast</Button>
-                <Button variant="secondary" onClick={() => scrollToId("advertising")} className="border-[#FF383C]/50 text-[#B12024] hover:border-[#FF383C] hover:bg-[#FFF1F2]">
-                  Place an ad
-                </Button>
-              </div>
               <div className="mt-8 grid gap-4 sm:grid-cols-3">
                 {[
                   { value: "300+", label: "episodes a year" },
@@ -611,8 +607,16 @@ export default function EnPage() {
 
         <Section
           id="production"
-          title={<><span>Production of your </span><HandUnderline>podcast</HandUnderline></>}
+          title={<>Podcasts that work for your brand</>}
+          subtitle="Advertising in Libo/Libo studio podcasts and podcast production - from idea to launch."
         >
+          <div className="mb-8 flex flex-col gap-3 sm:flex-row">
+            <Button onClick={() => scrollToId("production")}>CREATE A PODCAST</Button>
+            <Button variant="secondary" onClick={() => scrollToId("advertising")} className="border-[#FF383C]/50 text-[#B12024] hover:border-[#FF383C] hover:bg-[#FFF1F2]">
+              PLACE AN AD
+            </Button>
+          </div>
+
           <div className="mb-10 overflow-hidden border border-[#E8DDE0] bg-[#FFF9FA] p-6 md:p-8">
             <div className="h-[2px] w-24" style={{ backgroundColor: COLORS.accent }} />
             <p className="mt-5 max-w-4xl text-[clamp(1.5rem,2.7vw,2.2rem)] font-bold leading-tight text-black">
