@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { PodcastMosaic } from "@/components/PodcastMosaic";
 
 const COLORS = {
   bg: "#FFFFFF",
@@ -204,80 +205,6 @@ function CoverPlaceholder({ label = "Cover", src }: { label?: string; src?: stri
           {label}
         </span>
       </div>
-    </div>
-  );
-}
-
-function PodcastMosaic({ covers }: { covers: string[] }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [tileOrder, setTileOrder] = useState<number[]>(() => Array.from({ length: 6 }, (_, index) => index));
-  const tiles = Array.from({ length: 6 }, (_, index) => covers[index % covers.length]);
-  const smallTileIndexes = [1, 2, 3, 4, 5];
-
-  const slotByIndex: Array<{ col: number; row: number; colSpan?: number; rowSpan?: number }> = [
-    { col: 0, row: 0, colSpan: 2, rowSpan: 2 }, // big tile
-    { col: 2, row: 0 },
-    { col: 2, row: 1 },
-    { col: 0, row: 2 },
-    { col: 1, row: 2 },
-    { col: 2, row: 2 },
-  ];
-
-  useEffect(() => {
-    if (!isHovered) return;
-
-    const timer = window.setInterval(() => {
-      setTileOrder((prev) => {
-        const next = [...prev];
-        const first = smallTileIndexes[Math.floor(Math.random() * smallTileIndexes.length)];
-        let second = smallTileIndexes[Math.floor(Math.random() * smallTileIndexes.length)];
-        while (second === first) {
-          second = smallTileIndexes[Math.floor(Math.random() * smallTileIndexes.length)];
-        }
-
-        [next[first], next[second]] = [next[second], next[first]];
-        return next;
-      });
-    }, 1400);
-
-    return () => window.clearInterval(timer);
-  }, [isHovered]);
-
-  return (
-    <div
-      className="relative aspect-square w-full"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {tiles.map((src, tileIndex) => {
-        const slot = tileOrder[tileIndex];
-        const slotDef = slotByIndex[slot];
-        const colSpan = slotDef.colSpan ?? 1;
-        const rowSpan = slotDef.rowSpan ?? 1;
-        const col = slotDef.col;
-        const row = slotDef.row;
-
-        return (
-          <div
-            key={`tile-${tileIndex}`}
-            className="absolute overflow-hidden border border-[#E8DDE0] bg-white transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-            style={{
-              width: `calc(${colSpan} * ((100% - 1.5rem) / 3) + ${(colSpan - 1) * 0.75}rem)`,
-              height: `calc(${rowSpan} * ((100% - 1.5rem) / 3) + ${(rowSpan - 1) * 0.75}rem)`,
-              left: `calc(${col} * ((100% - 1.5rem) / 3 + 0.75rem))`,
-              top: `calc(${row} * ((100% - 1.5rem) / 3 + 0.75rem))`,
-            }}
-          >
-            <Image
-              src={src}
-              alt="Libo/Libo podcast cover"
-              fill
-              className="object-cover"
-              sizes="(min-width: 768px) 460px, 44vw"
-            />
-          </div>
-        );
-      })}
     </div>
   );
 }
@@ -494,6 +421,17 @@ export default function EnPage() {
     "/en/shows/techstart.jpg",
     "/en/shows/keeping-the-flame.jpg",
     "/en/shows/harbin.jpg",
+    "/en/mosaic/naked-mole-rat.png",
+    "/en/mosaic/daughter-of-a-robber.png",
+    "/en/mosaic/glad-you-said-that.png",
+    "/en/mosaic/addiction.png",
+    "/en/mosaic/sperva-rodi.png",
+    "/en/mosaic/no-right-way.png",
+    "/en/mosaic/launch-tomorrow.png",
+    "/en/mosaic/why-we-are-still-alive.png",
+    "/en/mosaic/on-what-basis.png",
+    "/en/mosaic/sunset-of-the-empire.png",
+    "/en/mosaic/time-and-money.png",
   ];
 
   return (
