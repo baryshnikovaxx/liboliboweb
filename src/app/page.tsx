@@ -435,7 +435,7 @@ export default function Page() {
 
               <p className="mt-6 max-w-xl text-[clamp(1.05rem,1.7vw,1.28rem)] leading-relaxed text-white/80">
                 Реклама в подкастах Либо/Либо и продакшен -{" "}
-                <span className="block">от задумки до публикации</span>
+                <span className="block"> от задумки до публикации </span>
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
