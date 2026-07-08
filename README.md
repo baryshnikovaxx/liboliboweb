@@ -29,8 +29,8 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This app runs on Selectel (not Vercel) behind nginx + PM2, alongside `libolibo`. Pushing to
+`main` deploys to business.libolibo.ru; pushing to `engversion` deploys to business.libolibo.me,
+via `.github/workflows/deploy.yml`. See `ecosystem.config.js` for the PM2 process definitions.
