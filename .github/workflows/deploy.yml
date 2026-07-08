@@ -1,0 +1,46 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - engversion
+
+jobs:
+  deploy-ru:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy business.libolibo.ru
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            cd /var/www/liboliboweb
+            git pull origin main
+            npm ci
+            npm run build
+            pm2 restart liboliboweb-ru
+
+  deploy-me:
+    if: github.ref == 'refs/heads/engversion'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy business.libolibo.me
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            cd /var/www/liboliboweb-me
+            git pull origin engversion
+            npm ci
+            npm run build
+            pm2 restart liboliboweb-me
