@@ -736,6 +736,7 @@ export default function Page() {
                   <label className="mt-2 flex items-start gap-3 text-sm leading-relaxed text-white/70">
                     <input
                       type="checkbox"
+                      required
                       className="mt-1 h-4 w-4 rounded-none border border-white/30 bg-transparent accent-[#FF383C]"
                     />
                     <span>Соглашаюсь на обработку персональных данных</span>
