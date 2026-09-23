@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const COLORS = {
   bg: "#111111",
@@ -195,6 +195,195 @@ function CoverPlaceholder({ label = "Обложка", src }: { label?: string; s
   );
 }
 
+const HERO_FADE_MS = 1200;
+const HERO_HOLD_MS = 3000;
+
+const HERO_PRIMARY_COVERS = [
+  "/covers/vremya-i-dengi.png",
+  "/covers/pochemu-my-esche-zhivy.png",
+  "/covers/nikakogo-pravilno.png",
+  "/covers/konkurenty.png",
+];
+
+const HERO_COVER_POOL = [
+  ...HERO_PRIMARY_COVERS,
+  "/case1.jpg",
+  "/case2.jpg",
+  "/case3.jpg",
+  "/case4.jpg",
+  "/case5.jpg",
+  "/case6.jpg",
+  "/case7.jpg",
+];
+
+function pickNextCover(
+  pool: string[],
+  currentTiles: string[],
+  overlaySrcs: Array<string | null>,
+  tileIndex: number,
+) {
+  const used = new Set<string>();
+  for (let i = 0; i < currentTiles.length; i += 1) {
+    if (i === tileIndex) continue;
+    used.add(currentTiles[i]);
+    const overlay = overlaySrcs[i];
+    if (overlay) used.add(overlay);
+  }
+
+  let available = pool.filter((src) => !used.has(src) && src !== currentTiles[tileIndex]);
+  if (available.length === 0) {
+    available = pool.filter((src) => !used.has(src));
+  }
+  if (available.length === 0) {
+    available = pool.filter((src) => src !== currentTiles[tileIndex]);
+  }
+  if (available.length === 0) return currentTiles[tileIndex];
+  return available[Math.floor(Math.random() * available.length)];
+}
+
+function HeroCoverTile({
+  src,
+  overlaySrc,
+  overlayVisible,
+}: {
+  src: string;
+  overlaySrc: string | null;
+  overlayVisible: boolean;
+}) {
+  return (
+    <div className="relative aspect-square w-full overflow-hidden bg-white/5">
+      <Image
+        src={src}
+        alt="Обложка подкаста"
+        fill
+        className="object-cover"
+        sizes="(min-width: 768px) 240px, 45vw"
+      />
+      {overlaySrc ? (
+        <div
+          className="absolute inset-0 transition-opacity ease-in-out"
+          style={{
+            opacity: overlayVisible ? 1 : 0,
+            transitionDuration: `${HERO_FADE_MS}ms`,
+          }}
+        >
+          <Image
+            src={overlaySrc}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="(min-width: 768px) 240px, 45vw"
+            aria-hidden
+          />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function HeroCoverGrid() {
+  const [tileSrcs, setTileSrcs] = useState(() => [...HERO_PRIMARY_COVERS]);
+  const [overlaySrcs, setOverlaySrcs] = useState<Array<string | null>>([null, null, null, null]);
+  const [overlayVisible, setOverlayVisible] = useState([false, false, false, false]);
+  const tileSrcsRef = useRef(tileSrcs);
+  const overlaySrcsRef = useRef(overlaySrcs);
+
+  tileSrcsRef.current = tileSrcs;
+  overlaySrcsRef.current = overlaySrcs;
+
+  useEffect(() => {
+    let cancelled = false;
+    const timers: number[] = [];
+
+    const clearTimer = (id: number) => {
+      window.clearTimeout(id);
+    };
+
+    const cycleTile = (tileIndex: number) => {
+      if (cancelled) return;
+
+      const next = pickNextCover(
+        HERO_COVER_POOL,
+        tileSrcsRef.current,
+        overlaySrcsRef.current,
+        tileIndex,
+      );
+      const overlayDraft = [...overlaySrcsRef.current];
+      overlayDraft[tileIndex] = next;
+      overlaySrcsRef.current = overlayDraft;
+      setOverlaySrcs(overlayDraft);
+
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+        setOverlayVisible((prev) => {
+          const copy = [...prev];
+          copy[tileIndex] = true;
+          return copy;
+        });
+      });
+
+      const fadeDone = window.setTimeout(() => {
+        if (cancelled) return;
+        setTileSrcs((prev) => {
+          const copy = [...prev];
+          copy[tileIndex] = next;
+          tileSrcsRef.current = copy;
+          return copy;
+        });
+        setOverlayVisible((prev) => {
+          const copy = [...prev];
+          copy[tileIndex] = false;
+          return copy;
+        });
+
+        const clearOverlay = window.setTimeout(() => {
+          if (cancelled) return;
+          setOverlaySrcs((prev) => {
+            const copy = [...prev];
+            copy[tileIndex] = null;
+            overlaySrcsRef.current = copy;
+            return copy;
+          });
+          scheduleTile(tileIndex);
+        }, 80);
+        timers.push(clearOverlay);
+      }, HERO_FADE_MS);
+      timers.push(fadeDone);
+    };
+
+    const scheduleTile = (tileIndex: number) => {
+      // ~3s hold + slight stagger so tiles rotate one after another, not all at once
+      const wait = HERO_HOLD_MS + tileIndex * 400 + Math.random() * 600;
+      const id = window.setTimeout(() => cycleTile(tileIndex), wait);
+      timers.push(id);
+    };
+
+    // Initial delay: keep primary covers visible first, then start rotation
+    const kickoff = window.setTimeout(() => {
+      for (let i = 0; i < 4; i += 1) scheduleTile(i);
+    }, HERO_HOLD_MS);
+    timers.push(kickoff);
+
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimer);
+    };
+  }, []);
+
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      {tileSrcs.map((src, index) => (
+        <HeroCoverTile
+          key={index}
+          src={src}
+          overlaySrc={overlaySrcs[index]}
+          overlayVisible={overlayVisible[index]}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function Page() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [name, setName] = useState("");
@@ -337,7 +526,6 @@ export default function Page() {
     },
     { title: "Город, в котором", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Повышение лояльности аудитории", cover: "/case7.jpg" },
   ];
-  const caseCovers = ["/case1.jpg", "/case2.jpg", "/case3.jpg", "/case4.jpg"];
 
   return (
     <div
@@ -448,12 +636,7 @@ export default function Page() {
               <div className="relative overflow-hidden border border-white/15 bg-white/[0.02] p-6 md:p-7">
                 <div className="absolute left-0 top-0 h-[2px] w-16" style={{ backgroundColor: COLORS.accent }} />
                 <div className="relative z-10">
-                  <div className="grid grid-cols-2 gap-4">
-                    <CoverPlaceholder label="Обложка #1" src={caseCovers[0]} />
-                    <CoverPlaceholder label="Обложка #2" src={caseCovers[1]} />
-                    <CoverPlaceholder label="Обложка #3" src={caseCovers[2]} />
-                    <CoverPlaceholder label="Обложка #4" src={caseCovers[3]} />
-                  </div>
+                  <HeroCoverGrid />
                 </div>
               </div>
             </div>
