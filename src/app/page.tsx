@@ -614,8 +614,8 @@ export default function Page() {
 
       <main>
         <div className="mx-auto w-full max-w-6xl px-6 pt-14 pb-10 md:pt-20 md:pb-14">
-          <div className="grid gap-10 md:grid-cols-12 md:gap-8">
-            <div className="md:col-span-7">
+          <div className="grid gap-10 md:grid-cols-12 md:gap-8 md:items-start">
+            <div className="-mt-6 md:col-span-7">
               <h1 className="mt-5 text-[clamp(2.5rem,7.2vw,5.25rem)] font-bold leading-[1.01]">
                 Подкасты, которые <HandUnderline>работают</HandUnderline> на ваш{" "}
                 <HandUnderline>бренд</HandUnderline>
