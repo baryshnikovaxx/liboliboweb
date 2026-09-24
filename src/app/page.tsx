@@ -389,14 +389,87 @@ function PodcastSlider({ shows }: { shows: Array<{ title: string; blurb: string;
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const didSwipe = useRef(false);
+  const dragState = useRef<{
+    active: boolean;
+    startX: number;
+    startScroll: number;
+    moved: boolean;
+    lastX: number;
+    lastT: number;
+    velocity: number;
+  }>({
+    active: false,
+    startX: 0,
+    startScroll: 0,
+    moved: false,
+    lastX: 0,
+    lastT: 0,
+    velocity: 0,
+  });
+  const animRef = useRef<number | null>(null);
+  const targetScrollRef = useRef(0);
+
+  const stopAnim = () => {
+    if (animRef.current != null) {
+      window.cancelAnimationFrame(animRef.current);
+      animRef.current = null;
+    }
+  };
+
+  const animateTo = (target: number, ease = 0.14) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const max = Math.max(0, el.scrollWidth - el.clientWidth);
+    targetScrollRef.current = Math.max(0, Math.min(max, target));
+
+    const tick = () => {
+      const node = scrollerRef.current;
+      if (!node) return;
+      const current = node.scrollLeft;
+      const distance = targetScrollRef.current - current;
+      if (Math.abs(distance) < 0.35) {
+        node.scrollLeft = targetScrollRef.current;
+        animRef.current = null;
+        return;
+      }
+      node.scrollLeft = current + distance * ease;
+      animRef.current = window.requestAnimationFrame(tick);
+    };
+
+    if (animRef.current == null) {
+      animRef.current = window.requestAnimationFrame(tick);
+    }
+  };
 
   const scrollByCard = (direction: -1 | 1) => {
     const el = scrollerRef.current;
     if (!el) return;
     const card = el.querySelector<HTMLElement>("[data-show-card]");
     const step = card ? card.offsetWidth + 24 : el.clientWidth * 0.8;
-    el.scrollBy({ left: direction * step, behavior: "smooth" });
+    const base = animRef.current != null ? targetScrollRef.current : el.scrollLeft;
+    animateTo(base + direction * step, 0.1);
   };
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    targetScrollRef.current = el.scrollLeft;
+
+    const onWheel = (e: WheelEvent) => {
+      if (el.scrollWidth <= el.clientWidth) return;
+      const delta =
+        Math.abs(e.deltaY) > Math.abs(e.deltaX) && !e.shiftKey ? e.deltaY : e.deltaX;
+      if (delta === 0) return;
+      e.preventDefault();
+      animateTo(targetScrollRef.current + delta * 1.2, 0.16);
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      stopAnim();
+    };
+  }, []);
 
   return (
     <div className="relative">
@@ -424,8 +497,73 @@ function PodcastSlider({ shows }: { shows: Array<{ title: string; blurb: string;
 
       <div
         ref={scrollerRef}
-        className="flex touch-pan-x snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex cursor-grab touch-pan-x snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain pb-3 active:cursor-grabbing md:snap-none [-ms-overflow-style:auto] [scrollbar-color:rgba(255,255,255,0.28)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/30 [&::-webkit-scrollbar-track]:bg-transparent"
         style={{ WebkitOverflowScrolling: "touch" }}
+        onPointerDown={(e) => {
+          if (e.pointerType !== "mouse" || e.button !== 0) return;
+          const node = scrollerRef.current;
+          if (!node) return;
+          stopAnim();
+          const now = performance.now();
+          dragState.current = {
+            active: true,
+            startX: e.clientX,
+            startScroll: node.scrollLeft,
+            moved: false,
+            lastX: e.clientX,
+            lastT: now,
+            velocity: 0,
+          };
+          targetScrollRef.current = node.scrollLeft;
+          node.setPointerCapture(e.pointerId);
+        }}
+        onPointerMove={(e) => {
+          const node = scrollerRef.current;
+          const drag = dragState.current;
+          if (!node || !drag.active) return;
+          const now = performance.now();
+          const dx = e.clientX - drag.startX;
+          if (Math.abs(dx) > 4) drag.moved = true;
+          const dt = Math.max(now - drag.lastT, 1);
+          drag.velocity = ((e.clientX - drag.lastX) / dt) * 16;
+          drag.lastX = e.clientX;
+          drag.lastT = now;
+          node.scrollLeft = drag.startScroll - dx;
+          targetScrollRef.current = node.scrollLeft;
+        }}
+        onPointerUp={(e) => {
+          const node = scrollerRef.current;
+          const drag = dragState.current;
+          if (node?.hasPointerCapture(e.pointerId)) {
+            node.releasePointerCapture(e.pointerId);
+          }
+          didSwipe.current = drag.moved;
+          if (node && drag.moved && Math.abs(drag.velocity) > 0.35) {
+            animateTo(node.scrollLeft - drag.velocity * 22, 0.07);
+          } else if (node) {
+            targetScrollRef.current = node.scrollLeft;
+          }
+          dragState.current = {
+            active: false,
+            startX: 0,
+            startScroll: 0,
+            moved: false,
+            lastX: 0,
+            lastT: 0,
+            velocity: 0,
+          };
+        }}
+        onPointerCancel={() => {
+          dragState.current = {
+            active: false,
+            startX: 0,
+            startScroll: 0,
+            moved: false,
+            lastX: 0,
+            lastT: 0,
+            velocity: 0,
+          };
+        }}
         onTouchStart={(e) => {
           touchStartX.current = e.touches[0]?.clientX ?? null;
           touchStartY.current = e.touches[0]?.clientY ?? null;
@@ -452,7 +590,7 @@ function PodcastSlider({ shows }: { shows: Array<{ title: string; blurb: string;
           <div
             key={show.title}
             data-show-card
-            className="w-[min(78vw,280px)] shrink-0 snap-start md:w-[calc((100%-3rem)/3)]"
+            className="w-[min(78vw,280px)] shrink-0 snap-start select-none md:w-[calc((100%-3rem)/3)]"
           >
             <Card className="h-full">
               <div className="flex h-full flex-col gap-3 md:gap-4">
@@ -461,6 +599,7 @@ function PodcastSlider({ shows }: { shows: Array<{ title: string; blurb: string;
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block"
+                  draggable={false}
                 >
                   <CoverPlaceholder label={show.title} src={show.cover} />
                 </a>
