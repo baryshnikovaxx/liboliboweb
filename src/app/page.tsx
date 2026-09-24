@@ -384,6 +384,109 @@ function HeroCoverGrid() {
   );
 }
 
+function PodcastSlider({ shows }: { shows: Array<{ title: string; blurb: string; link: string; cover: string }> }) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const didSwipe = useRef(false);
+
+  const scrollByCard = (direction: -1 | 1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>("[data-show-card]");
+    const step = card ? card.offsetWidth + 24 : el.clientWidth * 0.8;
+    el.scrollBy({ left: direction * step, behavior: "smooth" });
+  };
+
+  return (
+    <div className="relative">
+      <div className="mb-5 flex items-center justify-between gap-4">
+        <h3 className="text-[clamp(1.4rem,2.6vw,2rem)] font-bold leading-tight">Подкасты студии</h3>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => scrollByCard(-1)}
+            aria-label="Предыдущие подкасты"
+            className="inline-flex h-11 w-11 items-center justify-center border border-white/25 text-white/85 transition hover:border-white/50 hover:text-white"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollByCard(1)}
+            aria-label="Следующие подкасты"
+            className="inline-flex h-11 w-11 items-center justify-center border border-white/25 text-white/85 transition hover:border-white/50 hover:text-white"
+          >
+            →
+          </button>
+        </div>
+      </div>
+
+      <div
+        ref={scrollerRef}
+        className="flex touch-pan-x snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        style={{ WebkitOverflowScrolling: "touch" }}
+        onTouchStart={(e) => {
+          touchStartX.current = e.touches[0]?.clientX ?? null;
+          touchStartY.current = e.touches[0]?.clientY ?? null;
+          didSwipe.current = false;
+        }}
+        onTouchMove={(e) => {
+          if (touchStartX.current == null || touchStartY.current == null) return;
+          const dx = Math.abs((e.touches[0]?.clientX ?? 0) - touchStartX.current);
+          const dy = Math.abs((e.touches[0]?.clientY ?? 0) - touchStartY.current);
+          if (dx > 12 && dx > dy) didSwipe.current = true;
+        }}
+        onTouchEnd={() => {
+          touchStartX.current = null;
+          touchStartY.current = null;
+        }}
+        onClickCapture={(e) => {
+          if (!didSwipe.current) return;
+          e.preventDefault();
+          e.stopPropagation();
+          didSwipe.current = false;
+        }}
+      >
+        {shows.map((show) => (
+          <div
+            key={show.title}
+            data-show-card
+            className="w-[min(78vw,280px)] shrink-0 snap-start md:w-[calc((100%-3rem)/3)]"
+          >
+            <Card className="h-full">
+              <div className="flex h-full flex-col gap-3 md:gap-4">
+                <a
+                  href={show.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <CoverPlaceholder label={show.title} src={show.cover} />
+                </a>
+                <div>
+                  <div className="text-lg font-bold leading-tight md:text-xl">{show.title}</div>
+                  <p className="mt-2 text-sm leading-relaxed text-white/80 md:mt-3 md:text-base">{show.blurb}</p>
+                </div>
+                <div className="pt-0.5 md:mt-auto md:min-h-6 md:pt-1">
+                  <a
+                    href={show.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-base font-normal text-white/80 underline-offset-4 transition hover:text-[#FF383C] hover:underline"
+                  >
+                    Послушать <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </div>
+            </Card>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Page() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [name, setName] = useState("");
@@ -527,6 +630,81 @@ export default function Page() {
     { title: "Город, в котором", company: "Авито", link: "https://music.yandex.ru/album/10857054", goal: "Повышение лояльности аудитории", cover: "/case7.jpg" },
   ];
 
+  const studioShows = [
+    {
+      title: "Время и деньги",
+      blurb: "О роли бизнеса в истории России",
+      link: "https://pc.st/1730032598",
+      cover: "/covers/vremya-i-dengi.jpg",
+    },
+    {
+      title: "Почему мы ещё живы",
+      blurb: "О медицинских открытиях, которые изменили мир",
+      link: "https://podcast.ru/1568720773",
+      cover: "/covers/pochemu-my-esche-zhivy.jpg",
+    },
+    {
+      title: "Запуск завтра",
+      blurb: "О технологиях, меняющих нашу жизнь",
+      link: "https://podcast.ru/1488945593",
+      cover: "/covers/zapusk-zavtra.jpg",
+    },
+    {
+      title: "Никакого правильно",
+      blurb: "О ментальном здоровье, родительстве и правах женщин (смешно)",
+      link: "https://podcast.ru/1488479498",
+      cover: "/covers/nikakogo-pravilno.jpg",
+    },
+    {
+      title: "Сперва роди",
+      blurb: "О родительстве с тревогами, переживаниями и смешными историями",
+      link: "https://pc.st/1455337111",
+      cover: "/covers/sperva-rodi.jpg",
+    },
+    {
+      title: "Хорошо, что вы это сказали",
+      blurb: "О психотерапии — живой и настоящей",
+      link: "https://podcast.ru/1500763929",
+      cover: "/covers/horosho-chto-vy-eto-skazali.jpg",
+    },
+    {
+      title: "На каком основании",
+      blurb: "О правах человека и ответственности за их соблюдение",
+      link: "https://podcast.ru/1735291623",
+      cover: "/covers/na-kakom-osnovanii.jpg",
+    },
+    {
+      title: "Собес",
+      blurb: "О поиске работы в IT-сфере",
+      link: "https://podcast.ru/1638899174",
+      cover: "/covers/sobes.jpg",
+    },
+    {
+      title: "Святые из подполья",
+      blurb: "О немейнстримной русской религиозности",
+      link: "https://podcast.ru/1821444360",
+      cover: "/covers/svyatye-iz-podpolya.jpg",
+    },
+    {
+      title: "Два по цене одного",
+      blurb: "О том, как мы (неправильно) тратим деньги",
+      link: "https://podcast.ru/1371411915",
+      cover: "/covers/dva-po-cene-odnogo.jpg",
+    },
+    {
+      title: "Это непросто",
+      blurb: "О поиске любимого дела",
+      link: "https://podcast.ru/1437512522",
+      cover: "/covers/eto-neprosto.jpg",
+    },
+    {
+      title: "Краткая теория всего",
+      blurb: "О том, каким разным бывает нон-фикшн",
+      link: "https://podcast.ru/1660212646",
+      cover: "/covers/kratkaya-teoriya-vsego.jpg",
+    },
+  ];
+
   return (
     <div
       className="min-h-screen text-[clamp(1rem,1.2vw,1.08rem)]"
@@ -617,7 +795,7 @@ export default function Page() {
           <div className="grid gap-10 md:grid-cols-12 md:gap-8 md:items-start">
             <div className="-mt-6 md:col-span-7">
               <h1 className="mt-5 text-[clamp(2.5rem,7.2vw,5.25rem)] font-bold leading-[1.01]">
-                Подкасты, которые <HandUnderline>работают</HandUnderline> на ваш{" "}
+                Подкасты, которые <HandUnderline>работают</HandUnderline> на{"\u00A0"}ваш{" "}
                 <HandUnderline>бренд</HandUnderline>
               </h1>
 
@@ -688,6 +866,10 @@ export default function Page() {
                 </div>
               </Card>
             ))}
+          </div>
+
+          <div className="mt-14">
+            <PodcastSlider shows={studioShows} />
           </div>
         </Section>
 
